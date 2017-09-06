@@ -19,6 +19,7 @@ import {
 
 import LogUtils from './util/LogUtils';
 import Api from './api/Api';
+import BaseComponent from './base/BaseComponent';
 
 const styles = StyleSheet.create({
     container: {
@@ -43,19 +44,22 @@ const styles = StyleSheet.create({
         height:200,
     },
 });
-export default class App extends Component {
-    constructor(){
-        super();
+export default class App extends BaseComponent {
+    constructor(props){
+        super(props);
         this.api = new Api();
         this.state = {data:''}
     }
     componentDidMount(){
+        super.componentDidMount();
         this.api.getDate('2017-09').then(result => {
             LogUtils.logMsg("APP have bean started"+ JSON.stringify(result));
             this.setState({data:result});
         });
     }
+
     render() {
+        super.render();
         LogUtils.logMsg("APP have bean started");
         return (
             <View style={styles.container}>
@@ -68,5 +72,9 @@ export default class App extends Component {
                 />
             </View>
         );
+    }
+
+    onBackAndroid(){
+
     }
 }
