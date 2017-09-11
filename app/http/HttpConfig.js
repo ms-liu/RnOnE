@@ -20,7 +20,19 @@ export const convertResponse = response => {
 };
 
 /**
- * default proxy analyse response
+ * intercept response before save to local
+ * @param response
+ */
+export const interceptResponse = response => {
+    if (response.res === 0){
+        return true;
+    }else {
+        return false;
+    }
+};
+
+/**
+ * default proxy handle response
  * @param response
  */
 export const defaultHandleResponse = response => {

@@ -15,6 +15,7 @@ import {
     View,
     FlatList,
     Image,
+    ScrollView
 } from 'react-native';
 
 import LogUtils from './util/LogUtils';
@@ -22,55 +23,60 @@ import Api from './api/Api';
 import BaseComponent from './base/BaseComponent';
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF',
-    },
-    welcome: {
-        fontSize: 20,
-        textAlign: 'center',
-        margin: 10,
-    },
-    instructions: {
-        textAlign: 'center',
-        color: '#333333',
-        marginBottom: 5,
-    },
     itemImageStyle:{
         flex:1,
         width:'100%',
         height:200,
     },
+    flatContainerStyle:{
+        flex:1,
+    },
+    flatListStyle:{
+        // flex:1,
+        alignSelf:'flex-start',
+        width:'100%',
+        paddingTop:55,
+        flexShrink:0,
+    },
+
 });
 export default class App extends BaseComponent {
     constructor(props){
         super(props);
         this.api = new Api();
-        this.state = {data:''}
+        this.state.data ='';
     }
+    /**
+     * @inheritDoc
+     */
+    controlOrientation(controller) {
+        controller.lockToPortrait();
+    }
+
     componentDidMount(){
         super.componentDidMount();
         this.api.getDate('2017-09').then(result => {
-            LogUtils.logMsg("APP have bean started"+ JSON.stringify(result));
+            // LogUtils.logMsg("APP have bean started"+ JSON.stringify(result));
             this.setState({data:result});
         });
     }
 
-    render() {
-        super.render();
-        LogUtils.logMsg("APP have bean started");
+    renderBody() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.welcome}>
-                    RnOnE
-                </Text>
-                <FlatList
-                    data={this.state.data}
-                    renderItem={({item})=> <View><Image source={{uri:item.cover}}  style={styles.itemImageStyle}/><Text style={styles.instructions}>{JSON.stringify({item})}</Text></View>}
+            <FlatList
+
+                contentContainerStyle = {styles.flatListStyle}
+                onScroll = {(e)=>{super.bindVerticalScrollListener(e)}}
+                scrollEventThrottle = {1}
+
+                data={this.state.data}
+                renderItem={({item})=>
+                <View>
+                    <Image source={{uri:item.cover}}  style={styles.itemImageStyle}/>
+
+                </View>
+                }
                 />
-            </View>
         );
     }
 
@@ -78,3 +84,4 @@ export default class App extends BaseComponent {
 
     }
 }
+//<Text style={styles.instructions}>{JSON.stringify({item})}</Text>
