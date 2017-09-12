@@ -55,7 +55,7 @@ export default class TabBar extends Component {
         return tabs.map((tab,index)=>{
             return (Platform.OS === 'android'?
                     <TouchableOpacity
-                        style={styles.itemContainer} key={index} onpress={()=>{goToPage(index)}} activeOpacity={1}>
+                        style={styles.itemContainer} key={index} onPress={()=>{goToPage(index)}} activeOpacity={1}>
                         <Image
                             style={[styles.itemImage,
                                 activeTab === index?{tintColor:StyleScheme.colorAccent}:{tintColor:StyleScheme.tabDefaultColor}]}

@@ -50,7 +50,7 @@ export default  class BaseComponent extends Component{
      * 不可见，不可交互 ，UI未被初始化
      */
     componentWillMount(){
-        LogUtils.logMsg("====>componentWillMount");
+        // LogUtils.logMsg("====>componentWillMount");
     }
 
     /**
@@ -58,7 +58,7 @@ export default  class BaseComponent extends Component{
      * 可见
      */
     render(){
-        LogUtils.logMsg("====>render");
+        // LogUtils.logMsg("====>render");
     }
 
     /**
@@ -66,7 +66,7 @@ export default  class BaseComponent extends Component{
      * 可见 可交互
      */
     componentDidMount(){
-        LogUtils.logMsg("====>componentDidMount");
+        // LogUtils.logMsg("====>componentDidMount");
         this.loadData();
     }
 
@@ -74,14 +74,14 @@ export default  class BaseComponent extends Component{
      * 接受到Props被修改
      */
     componentWillReceiveProps(){
-        LogUtils.logMsg("====>componentWillReceiveProps");
+        // LogUtils.logMsg("====>componentWillReceiveProps");
     }
 
     /**
      * 更新组件显示内容完成
      */
     componentDidUpdate(){
-        LogUtils.logMsg("====>componentDidUpdate");
+        // LogUtils.logMsg("====>componentDidUpdate");
     }
 
     /**
@@ -89,7 +89,7 @@ export default  class BaseComponent extends Component{
      * 不可见
      */
     componentWillUnmount(){
-        LogUtils.logMsg("====>componentWillUnmount");
+        // LogUtils.logMsg("====>componentWillUnmount");
     }
 
     /**

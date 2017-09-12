@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
     bottomNavigatorStyle:{
         height:StyleScheme.bottomBarHeight,
         width:'100%',
+        paddingTop:StyleScheme.appBarHeight,
     }
 });
 
@@ -59,8 +60,15 @@ export default class App extends BaseUIComponent {
             <ScrollableTabView
                 tabBarPosition="bottom"
                 locked={true}
-                scrollWithoutAnimation={true}
+                onChangeTab={(re)=>{
+
+                    LogUtils.logMsg('=====currentPage>>>>'+re.i);
+                    LogUtils.logMsg('=====>>>>'+re.ref);
+                    LogUtils.logMsg('=====lastPage>>>>'+re.from);
+                }}
+                scrollWithoutAnimation={false}
                 prerenderingSiblingsNumber={2}
+                initialPage={0}
                 renderTabBar={()=>{
                     return <TabBar tabBarResources={TAB_BAR_RESOURCES}/>
                 }}

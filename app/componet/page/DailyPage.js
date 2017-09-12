@@ -22,6 +22,7 @@ import {
 } from 'react-native';
 import BaseLoadComponent from "../../base/BaseLoadComponent";
 import LogUtils from "../../util/LogUtils";
+import RefreshFlatList from "../widget/RefreshFlatList";
 
 const styles = StyleSheet.create({
     itemImageStyle:{
@@ -36,7 +37,6 @@ const styles = StyleSheet.create({
         // flex:1,
         alignSelf:'flex-start',
         width:'100%',
-        paddingTop:55,
         flexShrink:0,
     },
 });
@@ -44,32 +44,56 @@ const styles = StyleSheet.create({
 export default class DailyPage extends BaseLoadComponent{
     constructor(props){
         super(props);
-        this.state ={viewStatus:DailyPage.Loading};
+        this.bindItemViewModel = this.bindItemViewModel.bind(this);
+        this.doRefreshData = this.doRefreshData.bind(this);
+        this.doLoadMoreData = this.doLoadMoreData.bind(this);
+        this.state ={pageStatus:DailyPage.Success,viewStatus:RefreshFlatList.REFRESHING};
     }
 
     loadData(){
         this.mApi.getDate('2017-09').then(result => {
-            this.setState({data:result.data,viewStatus:result.status});
+            this.setState({data:result.data,viewStatus:RefreshFlatList.END_REQUEST});
         });
     }
 
     viewStatusController(){
-        return this.state.viewStatus;
+        return this.state.pageStatus;
     }
 
     renderSuccess(){
+        const {data,viewStatus}= this.state;
         return(
-            <FlatList
+            <RefreshFlatList
                 contentContainerStyle = {styles.flatListStyle}
                 scrollEventThrottle = {1}
-                data={this.state.data}
-                renderItem={({item})=>
-                    <View >
-                        <Image source={{uri:item.cover}}  style={styles.itemImageStyle}/>
-                    </View>
-                }
+                data={data}
+                bindItemViewModel={(itemData,index)=>this.bindItemViewModel(itemData,index)}
+                toggleRefresh = {true}
+                doRefreshData={()=>{this.doRefreshData()}}
+                doLoadMoreData={()=>{this.doLoadMoreData()}}
+                viewStatus={viewStatus}
             />
         );
+    }
+
+    doLoadMoreData() {
+        // this.loadData();
+
+    }
+
+    doRefreshData() {
+        // this.loadData();
+        this.mApi.getDate('2017-09').then(result => {
+            this.setState({data:result.data,pageStatus:DailyPage.Success,viewStatus:RefreshFlatList.END_REQUEST});
+        });
+    }
+
+    bindItemViewModel(itemData,index) {
+           return(
+               <View>
+                    <Image source={{uri:itemData.cover}}  style={styles.itemImageStyle}/>
+               </View>
+           );
     }
 }
 
