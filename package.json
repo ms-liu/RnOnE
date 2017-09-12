@@ -10,6 +10,7 @@
     "react": "16.0.0-alpha.12",
     "react-native": "0.48.0",
     "react-native-orientation": "^3.0.0",
+    "react-native-scrollable-tab-view": "^0.6.7",
     "react-native-simple-store": "latest",
     "react-native-store": "^0.4.1",
     "react-web": "0.4.6"

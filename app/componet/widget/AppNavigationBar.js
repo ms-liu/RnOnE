@@ -10,13 +10,13 @@
  */
 
 import React,{Component,PropTypes} from 'react';
-import StyleScheme from '../res/value/StyleScheme'
+import StyleScheme from '../../res/value/StyleScheme'
 import {
     StyleSheet,
     View,
     Animated
 } from 'react-native';
-import LogUtils from "../util/LogUtils";
+import LogUtils from "../../util/LogUtils";
 const styles = StyleSheet.create({
     navigatorStyle:{
         position:'absolute',
@@ -26,19 +26,16 @@ const styles = StyleSheet.create({
     },
 });
 export default class AppNavigationBar extends Component{
-    // static propTypes = {
-    //     height:PropTypes.value
-    // };
+    static property ={
+        height:React.PropTypes.number
+    };
 
     constructor(props){
         super(props);
-        console.log('=====state=='+JSON.stringify(this.state));
-        console.log('=====props=='+JSON.stringify(props));
     }
 
 
     render(){
-        LogUtils.logMsg('===height=='+JSON.stringify(this.props.height));
         return(
             <Animated.View style={[styles.navigatorStyle,{height:this.props.height}]}>
             </Animated.View>

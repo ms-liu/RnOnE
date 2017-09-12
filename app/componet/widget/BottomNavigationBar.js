@@ -10,11 +10,13 @@
  */
 
 import React,{Component} from 'react';
-import StyleScheme from '../res/value/StyleScheme'
+import StyleScheme from '../../res/value/StyleScheme';
 import {
     StyleSheet,
     View,
 } from 'react-native';
+
+
 const styles = StyleSheet.create({
     bottomStyle:{
         backgroundColor:'rgba(255, 0, 0, 0.6)',
@@ -25,9 +27,6 @@ const styles = StyleSheet.create({
 });
 
 export default class BottomNavigationBar extends Component {
-
-
-
     render(){
         return(
             <View style={[styles.bottomStyle]} >

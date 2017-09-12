@@ -20,27 +20,28 @@ import {
 
 import LogUtils from './util/LogUtils';
 import Api from './api/Api';
-import BaseComponent from './base/BaseComponent';
-
+import BaseUIComponent from './base/BaseUIComponent';
+import ScrollableTabView from 'react-native-scrollable-tab-view';
+import TabBar from "./componet/widget/TabBar";
+import StyleScheme from "./res/value/StyleScheme";
+import TimeUtils from "./util/TimeUtils";
+import CommonUtils from "./util/CommonUtils";
+import DailyPage from "./componet/page/DailyPage";
 const styles = StyleSheet.create({
-    itemImageStyle:{
-        flex:1,
-        width:'100%',
-        height:200,
-    },
-    flatContainerStyle:{
-        flex:1,
-    },
-    flatListStyle:{
-        // flex:1,
-        alignSelf:'flex-start',
-        width:'100%',
-        paddingTop:55,
-        flexShrink:0,
-    },
 
+    bottomNavigatorStyle:{
+        height:StyleScheme.bottomBarHeight,
+        width:'100%',
+    }
 });
-export default class App extends BaseComponent {
+
+const TAB_BAR_RESOURCES = [
+    [CommonUtils.getDailyIcon(), CommonUtils.getActDailyIcon()],
+    [require('./res/image/all.png'), require('./res/image/all_act.png')],
+];
+
+
+export default class App extends BaseUIComponent {
     constructor(props){
         super(props);
         this.api = new Api();
@@ -53,32 +54,25 @@ export default class App extends BaseComponent {
         controller.lockToPortrait();
     }
 
-    componentDidMount(){
-        super.componentDidMount();
-        this.api.getDate('2017-09').then(result => {
-            // LogUtils.logMsg("APP have bean started"+ JSON.stringify(result));
-            this.setState({data:result});
-        });
-    }
-
-    renderBody() {
+    renderBody(){
         return (
-            <FlatList
-
-                contentContainerStyle = {styles.flatListStyle}
-                onScroll = {(e)=>{super.bindVerticalScrollListener(e)}}
-                scrollEventThrottle = {1}
-
-                data={this.state.data}
-                renderItem={({item})=>
-                <View>
-                    <Image source={{uri:item.cover}}  style={styles.itemImageStyle}/>
-
-                </View>
-                }
-                />
+            <ScrollableTabView
+                tabBarPosition="bottom"
+                locked={true}
+                scrollWithoutAnimation={true}
+                prerenderingSiblingsNumber={2}
+                renderTabBar={()=>{
+                    return <TabBar tabBarResources={TAB_BAR_RESOURCES}/>
+                }}
+                style={styles.bottomNavigatorStyle}
+            >
+                <DailyPage />
+                <View/>
+            </ScrollableTabView>
         );
+
     }
+
 
     onBackAndroid(){
 

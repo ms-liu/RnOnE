@@ -12,6 +12,7 @@ import TimeUtils from '../util/TimeUtils';
 import HttpCacheManager from "./HttpCache";
 import {BASE_URL,CACHE_TOGGLE,convertResponse,defaultHandleResponse}from'./HttpConfig';
 import React, { Component } from 'react';
+import BaseLoadComponent from "../base/BaseLoadComponent";
 
 export default class HttpManager extends Component{
 
@@ -58,7 +59,9 @@ export default class HttpManager extends Component{
                       return result.then(defaultHandleResponse);
                   }else {
                       LogUtils.logMsg('save cache ');
-                      return this.httpCacheManager.saveCache(url,this.doFetch(url,method,body),doCache).then(defaultHandleResponse);
+                      return this.httpCacheManager
+                          .saveCache(url,this.doFetch(url,method,body),doCache)
+                          .then(defaultHandleResponse);
                   }
             });
         }else {
@@ -139,7 +142,7 @@ export default class HttpManager extends Component{
             return result;
         }).catch(err => {
             LogUtils.logMsg(`${requestInfo} ${err}`);
-            return Promise.reject(err);
+            return {status:BaseLoadComponent.Error,data:null,msg:'网络链接异常，请检查网络~'};
         })
     };
 

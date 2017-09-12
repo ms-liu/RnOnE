@@ -16,6 +16,6 @@ export default class Api{
     }
 
     getDate = (date)=>{
-        return this.http.doGet(true)(`feeds/list/${date}${this.COMMON_PARAMETER}`);
+        return this.http.doGet(false)(`feeds/list/${date}${this.COMMON_PARAMETER}`);
     }
 }

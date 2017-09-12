@@ -7,6 +7,7 @@
  * CrateDate:2017/9/6
  *===========================================
  */
+'use strict';
 import React,{Component} from 'react'
 import {
     Platform,
@@ -17,15 +18,6 @@ import {
 } from 'react-native'
 import LogUtils from "../util/LogUtils";
 import OrientationIOS from 'react-native-orientation'//https://github.com/yamill/react-native-orientation
-import BottomNavigationBar from '../componet/BottomNavigationBar'
-import AppNavigationBar from '../componet/AppNavigationBar'
-import StyleScheme from '../res/value/StyleScheme'
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor:StyleScheme.pageBackground,
-    },
-});
 
 export default  class BaseComponent extends Component{
     constructor(props){
@@ -38,10 +30,6 @@ export default  class BaseComponent extends Component{
             Orientation = OrientationAndroid;
         }
         this.controlOrientation(Orientation);
-        // this.setState({transAnimate:55,})
-        this.state = {transAnimate:new Animated.Value(55)};
-        // console.log(this.state.transAnimate);
-        this.lastTop = 0;
     };
 
     /**
@@ -57,81 +45,58 @@ export default  class BaseComponent extends Component{
         controller.lockToPortrait();
     }
 
+    /**
+     * 组件将要被挂载
+     * 不可见，不可交互 ，UI未被初始化
+     */
     componentWillMount(){
         LogUtils.logMsg("====>componentWillMount");
-
-    }
-
-
-    /**
-     * 绑定垂直滚动监听 方便做动画效果
-     * @param e
-     */
-    bindVerticalScrollListener(e){
-        //todo 实现 头部滚动动画 效果
     }
 
     /**
-     * 返回头部布局
-     * @returns {XML}
+     * 展示内容
+     * 可见
      */
-    renderNavigator(){
-        return(
-            <AppNavigationBar
-                opacity={0.2}
-                height = {this.state.transAnimate}
-            />
-        );
-    }
-
-    /**
-     * 获取主体布局
-     */
-    renderBody(){
-
-    }
-
-    /**
-     * 获取底部导航布局
-     * @returns {XML}
-     */
-    renderBottomNavigator(){
-        return(
-            <BottomNavigationBar />
-        );
-    }
-
-    /**
-     * 底部显示控制器
-     * @returns {boolean} false 不显示  true 显示
-     */
-    toggleBottomNavigator(){
-        return false;
-    }
-
     render(){
-        return(
-            <View style={styles.container}>
-                {this.renderBody()}
-                {this.renderNavigator()}
-                {this.toggleBottomNavigator()?this.renderBottomNavigator():<View/>}
-            </View>
-        );
+        LogUtils.logMsg("====>render");
     }
+
+    /**
+     * 组件挂载完成
+     * 可见 可交互
+     */
     componentDidMount(){
         LogUtils.logMsg("====>componentDidMount");
+        this.loadData();
     }
 
+    /**
+     * 接受到Props被修改
+     */
     componentWillReceiveProps(){
         LogUtils.logMsg("====>componentWillReceiveProps");
     }
 
+    /**
+     * 更新组件显示内容完成
+     */
     componentDidUpdate(){
         LogUtils.logMsg("====>componentDidUpdate");
     }
 
+    /**
+     * 组件被移除
+     * 不可见
+     */
     componentWillUnmount(){
         LogUtils.logMsg("====>componentWillUnmount");
+    }
+
+    /**
+     * 请求网络数据
+     */
+    loadData() {
+
     }
 }
 

@@ -11,5 +11,10 @@
 export default class TimeUtils{
     static getCurrentTimestamp = ()=>{
         return new Date().getTime();
-    }
+    };
+
+    static getCurrentDayOfMonth =()=>{
+        return new Date().getDate();
+    };
+
 }

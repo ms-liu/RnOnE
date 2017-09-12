@@ -29,7 +29,8 @@ const colorScheme ={
     textColor2:'#7E8C9D',
     lineColor:'#E2EAF2',
     tipTextColor:'#B5B5B5',
-    tipTextColorHighlight:'#FD7055'
+    tipTextColorHighlight:'#FD7055',
+    tabDefaultColor:'#707070'
 };
 
 /**
@@ -38,6 +39,7 @@ const colorScheme ={
  */
 const dimensScheme = {
     appBarHeight:55,
+    bottomBarHeight:55,
     matchParent:'100%',
 };
 

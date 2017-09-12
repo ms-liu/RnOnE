@@ -8,6 +8,7 @@
  *===========================================
  */
 import LogUtils from "../util/LogUtils";
+import BaseLoadComponent from "../base/BaseLoadComponent";
 
 export const CACHE_TOGGLE = true;
 export const BASE_URL = 'http://v3.wufazhuce.com:8000/api/';
@@ -36,10 +37,19 @@ export const interceptResponse = response => {
  * @param response
  */
 export const defaultHandleResponse = response => {
+    const result = {status:0,data:null,msg:''};
     if (response.res === 0) {
-        return response.data;
+        result.status = BaseLoadComponent.Success;
+        result.data = response.data;
+        if (response.data === null || !response.data){
+            result.msg = '暂无数据';
+        }else {
+            result.msg = '成功';
+        }
     } else {
-        LogUtils.logMsg(response.msg);
-        throw response.msg;
+        result.status = BaseLoadComponent.Error;
+        result.data = null;
+        result.msg = `网络错误${response.msg}`;
     }
+    return result;
 };
