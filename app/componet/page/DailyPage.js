@@ -21,8 +21,10 @@ import {
     Image
 } from 'react-native';
 import BaseLoadComponent from "../../base/BaseLoadComponent";
-import LogUtils from "../../util/LogUtils";
 import RefreshFlatList from "../widget/RefreshFlatList";
+import StyleScheme from "../../res/value/StyleScheme";
+import BaseRefreshComponent from "../widget/BaseRefreshComponent";
+
 
 const styles = StyleSheet.create({
     itemImageStyle:{
@@ -41,50 +43,33 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class DailyPage extends BaseLoadComponent{
+export default class DailyPage extends BaseRefreshComponent{
     constructor(props){
         super(props);
-        this.bindItemViewModel = this.bindItemViewModel.bind(this);
-        this.doRefreshData = this.doRefreshData.bind(this);
-        this.doLoadMoreData = this.doLoadMoreData.bind(this);
-        this.state ={pageStatus:DailyPage.Success,viewStatus:RefreshFlatList.REFRESHING};
-    }
 
-    loadData(){
-        this.mApi.getDate('2017-09').then(result => {
-            this.setState({data:result.data,viewStatus:RefreshFlatList.END_REQUEST});
-        });
     }
-
-    viewStatusController(){
-        return this.state.pageStatus;
+    renderEmptyView(){
+        return(<Text>暂无数据</Text>)
     }
-
-    renderSuccess(){
-        const {data,viewStatus}= this.state;
-        return(
-            <RefreshFlatList
-                contentContainerStyle = {styles.flatListStyle}
-                scrollEventThrottle = {1}
-                data={data}
-                bindItemViewModel={(itemData,index)=>this.bindItemViewModel(itemData,index)}
-                toggleRefresh = {true}
-                doRefreshData={()=>{this.doRefreshData()}}
-                doLoadMoreData={()=>{this.doLoadMoreData()}}
-                viewStatus={viewStatus}
-            />
-        );
+    itemSeparatorComponent() {
+        return(<View style={{height:10,backgroundColor:'white'}}/>);
     }
 
     doLoadMoreData() {
-        // this.loadData();
-
+        this.setState({viewStatus:RefreshFlatList.LOADING_MORE});
+        this.mApi.getDate('2018-08').then(result => {
+            if (result.data === null || result.data.length === 0){
+                this.setState({viewStatus:RefreshFlatList.NO_MORE});
+            }else {
+                let newData = this.state.data.concat(result.data);
+                this.setState({data:newData,viewStatus:RefreshFlatList.END_REQUEST});
+            }
+        });
     }
 
     doRefreshData() {
-        // this.loadData();
         this.mApi.getDate('2017-09').then(result => {
-            this.setState({data:result.data,pageStatus:DailyPage.Success,viewStatus:RefreshFlatList.END_REQUEST});
+            this.setState({data:result.data,viewStatus:RefreshFlatList.END_REQUEST});
         });
     }
 

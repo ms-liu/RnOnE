@@ -14,6 +14,20 @@ import {
 import TimeUtils from "./TimeUtils";
 
 export default class CommonUtils{
+    static checkAndroid(){
+        return Platform.OS === 'android';
+    }
+    static checkIOS(){
+        return Platform.OS === 'ios';
+    }
+    static checkWeb(){
+        return Platform.OS === 'web';
+    }
+
+    static randomNum(min,max){
+        return min + Math.round(Math.random()*(max-min));
+    }
+
     static getDailyIcon = ()=>{
         switch (TimeUtils.getCurrentDayOfMonth()){
             case 1:
@@ -149,5 +163,9 @@ export default class CommonUtils{
             default:
                 return require('../res/image/daily/dayDefault_act.png');
         }
+    }
+
+    static checkFunction(ItemSeparatorComponent) {
+        return typeof ItemSeparatorComponent === 'function';
     }
 }

@@ -17,7 +17,7 @@ import {
     Animated, ScrollView, Text,
 } from 'react-native'
 import LogUtils from "../util/LogUtils";
-import OrientationIOS from 'react-native-orientation'//https://github.com/yamill/react-native-orientation
+import OrientationIOS from 'react-native-orientation'
 import StyleScheme from '../res/value/StyleScheme'
 import BaseComponent from "./BaseComponent";
 import BottomNavigationBar from '../componet/widget/BottomNavigationBar'

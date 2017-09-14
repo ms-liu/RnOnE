@@ -11,44 +11,92 @@
  */
 import React,{Component} from 'react';
 import {}from 'react-native';
-import {FlatList,View} from "react-native";
+import {Platform,FlatList,View} from "react-native";
 import LogUtils from "../../util/LogUtils";
 import {Text,} from "react-native";
 import {RefreshControl} from "react-native";
-import StyleScheme from "../../res/value/StyleScheme";
+import Toast from "../widget/Toast";
 import  RefreshLayoutConsts from "react-native/Libraries/Components/RefreshControl/RefreshControl";
+import StringValue from "../../res/value/StringValue";
+import CommonUtils from "../../util/CommonUtils";
+import StyleScheme from "../../res/value/StyleScheme";
+
 
 export default class RefreshFlatList extends Component {
-    static REFRESHING = 1;
-    static LOADING_MORE = 2;
-    static NO_MORE = 3;
-    static END_REQUEST = 4;
+    static REFRESHING = 1;//正在刷新
+    static LOADING_MORE = 2;//正在加载
+    static NO_MORE = 3;//没有更多数据
+    static END_REQUEST = 4;//结束请求
 
     static property = {
         doRefreshData:React.PropTypes.func,
         doLoadMoreData:React.PropTypes.func,
+
+        androidRefreshProgressColors:React.PropTypes.array,
+        androidProgressBackgroundColor:React.PropTypes.string,
+        iOSRefreshProgressColor:React.PropTypes.string,
+
         contentContainerStyle:React.PropTypes.StyleSheet,
         refreshingTipMsg:React.PropTypes.string,
         loadingTipMsg:React.PropTypes.string,
+        tipTextColor:React.PropTypes.string,
         noMoreDataTipMsg:React.PropTypes.string,
+
         viewStatus:React.PropTypes.number,
+
         toggleRefresh:React.PropTypes.bool,
         toggleLoadMore:React.PropTypes.bool,
+
+        onEndReachedThreshold:React.PropTypes.number,
+        ItemSeparatorComponent:React.PropTypes.func,
+        NoMoreComponent:React.PropTypes.func,
+        RefreshingComponent:React.PropTypes.func,
+        LoadingMoreComponent:React.PropTypes.func,
+        ListEmptyComponent:React.PropTypes.func,
     };
 
     constructor(props){
         super(props);
         this.onEndReached = this.onEndReached.bind(this)
+        this.defaultListEmptyComponent = this.defaultListEmptyComponent.bind(this)
     }
 
     _keyExtractor = (item, index) =>index;
 
     listFooterComponent(){
-        return(
-          <Text>
-              加载更多
-          </Text>
-        );
+
+        const {
+            viewStatus,
+            LoadingMoreComponent,
+            NoMoreComponent,
+            RefreshingComponent,
+            toggleLoadMore
+        } = this.props;
+        // if (!toggleLoadMore){
+        //     return (<View/>);
+        // }
+        switch (viewStatus){
+            case RefreshFlatList.REFRESHING:
+                return (<View/>);
+            case RefreshFlatList.NO_MORE:
+                return(
+                    <Text>
+                        {StringValue.noMore[CommonUtils.randomNum(0,StringValue.noMore.length -1)]}
+                    </Text>
+                );
+            case RefreshFlatList.END_REQUEST:
+                return <View/>;
+                break;
+            case RefreshFlatList.LOADING_MORE:
+                return(
+                    <Text>
+                        正在努力加载中...
+                    </Text>
+                );
+            default:
+                LogUtils.errorMsg('viewStatus is invalid,Current ViewStatus'+viewStatus);
+                break;
+        }
     };
 
     listHeaderComponent(){
@@ -64,6 +112,10 @@ export default class RefreshFlatList extends Component {
             toggleRefresh,
             refreshingTipMsg,
             viewStatus,
+            iOSRefreshProgressColor,
+            tipTextColor,
+            androidProgressBackgroundColor,
+            androidRefreshProgressColors,
         }=this.props;
         return(
             <RefreshControl
@@ -71,27 +123,35 @@ export default class RefreshFlatList extends Component {
                 onRefresh={()=>this.doRefreshData()}
                 //android config
                 enabled = {toggleRefresh}
-                colors={[StyleScheme.colorAccent]}
+                colors={androidRefreshProgressColors}
                 size={RefreshLayoutConsts.SIZE.DEFAULT}
-                progressBackgroundColor={StyleScheme.colorPrimary}
+                progressBackgroundColor={androidProgressBackgroundColor}
 
                 //iOS config
                 title={refreshingTipMsg}
-                titleColor={StyleScheme.tipTextColor}
-                tintColor={StyleScheme.colorAccent}
+                titleColor={tipTextColor}
+                tintColor={iOSRefreshProgressColor}
+
             />
         );
     }
 
     onEndReached(){
-        LogUtils.logMsg('========onEndReached=')
+        this.doLoadMoreData();
     }
+    _separator(){
+        return <View style={{height:2,backgroundColor:'yellow'}}/>;
+    };
 
     render() {
         const{
             data,
             bindItemViewModel,
-            contentContainerStyle
+            contentContainerStyle,
+            onEndReachedThreshold,
+            ItemSeparatorComponent,
+
+
         } = this.props;
 
         return (
@@ -101,8 +161,11 @@ export default class RefreshFlatList extends Component {
                 refreshControl={this.bindRefreshControl()}
                 keyExtractor={this._keyExtractor}
                 renderItem={({item,index})=>{return bindItemViewModel(item,index)}}
-                onEndReached = {this.onEndReached}
                 onEndReachedThreshold = {0.5}
+                onEndReached = {()=>this.onEndReached()}
+                ListFooterComponent={this.listFooterComponent()}
+                ItemSeparatorComponent={CommonUtils.checkFunction(ItemSeparatorComponent)?ItemSeparatorComponent:this.defaultItemSeparatorComponent}
+                ListEmptyComponent = {this.defaultListEmptyComponent}
             />
         );
     }
@@ -117,11 +180,10 @@ export default class RefreshFlatList extends Component {
         } = this.props;
         switch (viewStatus){
             case RefreshFlatList.REFRESHING:
-                // todo add plugin , show Toast
-                LogUtils.logMsg('current refreshing');
-                break;
+                // Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,3)]);
+                // break;
             case RefreshFlatList.LOADING_MORE:
-
+                Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip-1))]);
                 break;
             case RefreshFlatList.NO_MORE:
             case RefreshFlatList.END_REQUEST:
@@ -140,23 +202,49 @@ export default class RefreshFlatList extends Component {
         const {
             doLoadMoreData,
             viewStatus,
+            toggleLoadMore,
         } = this.props;
+        if (!toggleLoadMore)
+            return;
         switch (viewStatus){
-            case RefreshFlatList.REFRESHING:
+
             case RefreshFlatList.END_REQUEST:
                 doLoadMoreData();
                 break;
+            case RefreshFlatList.REFRESHING:
             case RefreshFlatList.LOADING_MORE:
-                // todo add plugin , show Toast
-                LogUtils.logMsg('current loading_more');
+                Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip.length -1))]);
                 break;
             case RefreshFlatList.NO_MORE:
-                // todo add plugin , show Toast
                 LogUtils.logMsg('current no_more');
                 break;
+            default:
+                LogUtils.errorMsg('viewStatus is invalid,Current ViewStatus'+viewStatus);
+                break;
+        }
+    }
+
+    defaultItemSeparatorComponent() {
+        return(<View style={{height:2,backgroundColor:'white'}}/>);
+    }
+
+    defaultListEmptyComponent() {
+        const {
+            viewStatus,
+            ListEmptyComponent,
+        } = this.props;
+        let emptyView;
+        if ( CommonUtils.checkFunction(ListEmptyComponent)){
+            emptyView =  ListEmptyComponent();
+        }else {
+            emptyView = <Text>{StringValue.empty[CommonUtils.randomNum(0,(StringValue.empty.length -1))]}</Text>;
+        }
+
+        if (viewStatus === RefreshFlatList.END_REQUEST){
+            return emptyView;
+        }else {
+            return <View/>
         }
     }
 }
 
-// ListFooterComponent={this.listFooterComponent()}
-// ListHeaderComponent = {this.listHeaderComponent()}
