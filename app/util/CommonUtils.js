@@ -12,6 +12,7 @@ import {
     Platform,
 }from 'react-native'
 import TimeUtils from "./TimeUtils";
+import LogUtils from "./LogUtils";
 
 export default class CommonUtils{
     static checkAndroid(){
@@ -163,9 +164,9 @@ export default class CommonUtils{
             default:
                 return require('../res/image/daily/dayDefault_act.png');
         }
-    }
+    };
 
-    static checkFunction(ItemSeparatorComponent) {
-        return typeof ItemSeparatorComponent === 'function';
+    static checkFunction(func) {
+        return typeof func === 'function';
     }
 }

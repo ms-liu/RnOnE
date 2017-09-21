@@ -20,7 +20,7 @@ import LogUtils from "../../util/LogUtils";
 const styles = StyleSheet.create({
     navigatorStyle:{
         position:'absolute',
-        backgroundColor:StyleScheme.colorAccent,
+        backgroundColor:StyleScheme.colorPrimary,
         width:StyleScheme.matchParent,
         height:StyleScheme.appBarHeight,
     },
@@ -37,8 +37,8 @@ export default class AppNavigationBar extends Component{
 
     render(){
         return(
-            <Animated.View style={[styles.navigatorStyle,{height:this.props.height}]}>
-            </Animated.View>
+            <View style={[styles.navigatorStyle]}>
+            </View>
 
         );
     }

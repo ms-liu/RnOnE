@@ -29,7 +29,7 @@
 'use strict';
 import React,{Component} from 'react';
 import {
-    StyleSheet,
+    StyleSheet, Text,
     View,
 } from 'react-native';
 import BaseLoadComponent from "../../base/BaseLoadComponent";
@@ -88,6 +88,10 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
 
     }
 
+    renderNavigator(){
+        return <View/>;
+    }
+
     /**
      * @override BaseLoadComponent.renderSuccess
      * @returns {XML}
@@ -95,23 +99,23 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
      renderSuccess(){
         const {data,viewStatus,toggleLoadMore}= this.state;
         return(
-            <RefreshFlatList
-                contentContainerStyle = {styles.flatListStyle}
-                androidRefreshProgressColors={[StyleScheme.colorAccent]}
-                androidProgressBackgroundColor = {StyleScheme.colorPrimary}
-                tipTextColor={StyleScheme.tipTextColor}
-                iOSRefreshProgressColor={StyleScheme.colorAccent}
-                scrollEventThrottle = {1}
-                data={data}
-                bindItemViewModel={(itemData,index)=>this.bindItemViewModel(itemData,index)}
-                toggleRefresh = {this.toggleRefresh()}
-                toggleLoadMore = {this.toggleLoadMore()}
-                doRefreshData={()=>{this.doRefreshData()}}
-                doLoadMoreData={()=>{this.doLoadMoreData()}}
-                viewStatus={viewStatus}
-                ItemSeparatorComponent ={this.ItemSeparatorComponent}
-                ListEmptyComponent={this.renderEmptyView}
-            />
+                <RefreshFlatList
+                    contentContainerStyle = {styles.flatListStyle}
+                    androidRefreshProgressColors={[StyleScheme.colorAccent]}
+                    androidProgressBackgroundColor = {StyleScheme.colorPrimary}
+                    tipTextColor={StyleScheme.tipTextColor}
+                    iOSRefreshProgressColor={StyleScheme.colorAccent}
+                    scrollEventThrottle = {1}
+                    data={data}
+                    bindItemViewModel={(itemData,index)=>this.bindItemViewModel(itemData,index)}
+                    toggleRefresh = {this.toggleRefresh()}
+                    toggleLoadMore = {this.toggleLoadMore()}
+                    doRefreshData={()=>{this.doRefreshData()}}
+                    doLoadMoreData={()=>{this.doLoadMoreData()}}
+                    viewStatus={viewStatus}
+                    ItemSeparatorComponent ={this.itemSeparatorComponent}
+                    ListEmptyComponent={this.renderEmptyView}
+                />
         );
     }
 

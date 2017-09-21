@@ -13,6 +13,7 @@ public class MainActivity extends ReactActivity {
     protected String getMainComponentName() {
         return "RnOnE";
     }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -20,4 +21,5 @@ public class MainActivity extends ReactActivity {
         intent.putExtra("newConfig", newConfig);
         this.sendBroadcast(intent);
     }
+
 }

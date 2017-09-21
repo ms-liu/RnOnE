@@ -14,10 +14,9 @@ import {
     NativeModules,
     StyleSheet,
     View,
-    Animated, ScrollView, Text,
+    Animated, ScrollView, Text, Navigator,
 } from 'react-native'
-import LogUtils from "../util/LogUtils";
-import OrientationIOS from 'react-native-orientation'
+
 import StyleScheme from '../res/value/StyleScheme'
 import BaseComponent from "./BaseComponent";
 import BottomNavigationBar from '../componet/widget/BottomNavigationBar'
@@ -32,7 +31,9 @@ const styles = StyleSheet.create({
 export default  class BaseUIComponent extends BaseComponent{
     constructor(props){
         super(props);
-        this.state = {transAnimate:new Animated.Value(55)};
+        this.renderNavigator = this.renderNavigator.bind(this);
+        this.renderBody = this.renderBody.bind(this);
+        this.toggleBottomNavigator = this.toggleBottomNavigator.bind(this);
     };
 
 
@@ -50,10 +51,7 @@ export default  class BaseUIComponent extends BaseComponent{
      */
     renderNavigator(){
         return(
-            <AppNavigationBar
-                opacity={0.2}
-                height = {this.state.transAnimate}
-            />
+            <AppNavigationBar />
         );
     }
 

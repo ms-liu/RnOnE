@@ -12,13 +12,13 @@ import React,{Component} from 'react'
 import {
     Platform,
     NativeModules,
-    StyleSheet,
-    View,
-    Animated, ScrollView, Text,
+    BackHandler,
+
 } from 'react-native'
 import LogUtils from "../util/LogUtils";
-import OrientationIOS from 'react-native-orientation'//https://github.com/yamill/react-native-orientation
-
+import OrientationIOS from 'react-native-orientation'
+import Toast from "../componet/widget/Toast";
+let lastClickTime = 0;
 export default  class BaseComponent extends Component{
     constructor(props){
         super(props);
@@ -31,6 +31,18 @@ export default  class BaseComponent extends Component{
         }
         this.controlOrientation(Orientation);
     };
+    static navigationOptions  = {
+        title:'NewP',
+        gesturesEnabled:true,
+        cardStack:{
+            gesturesEnabled: true,
+        }
+    };
+
+    // static StackNavigatorConfig={
+    //     initialRouteName:'',
+    //     mode:'none',
+    // };
 
     /**
      * 屏幕方向控制
@@ -50,6 +62,7 @@ export default  class BaseComponent extends Component{
      * 不可见，不可交互 ，UI未被初始化
      */
     componentWillMount(){
+        BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid)
         // LogUtils.logMsg("====>componentWillMount");
     }
 
@@ -89,7 +102,18 @@ export default  class BaseComponent extends Component{
      * 不可见
      */
     componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress')
         // LogUtils.logMsg("====>componentWillUnmount");
+    }
+
+    onBackAndroid() {
+        let now = new Date().getTime();
+        if (now - lastClickTime < 1500) {//2.5秒内点击后退键两次推出应用程序
+            return false;//控制权交给原生
+        }
+        lastClickTime = now;
+        Toast.show('再按一次退出');
+        return true;
     }
 
     /**

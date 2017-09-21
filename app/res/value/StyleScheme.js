@@ -25,12 +25,12 @@ const colorScheme ={
 
     grey: '#7F7F7F',
     pageBackground: '#F9FAFB',
-    textColor:'#000',
+    textColor:'#616161',
     textColor2:'#7E8C9D',
-    lineColor:'#E2EAF2',
-    tipTextColor:'#B5B5B5',
+    lineColor:'#eee',
+    tipTextColor:'#9e9e9e',
     tipTextColorHighlight:'#FD7055',
-    tabDefaultColor:'#707070'
+    tabDefaultColor:'#9e9e9e'
 };
 
 /**
@@ -38,9 +38,15 @@ const colorScheme ={
  * @type {{}}
  */
 const dimensScheme = {
-    appBarHeight:55,
+    appBarHeight:50,
     bottomBarHeight:55,
     matchParent:'100%',
+    barTextSize:18,
+    commonTextSize:14,
+    commonTitleTextSize:22,
+    commonTipTextSize:12,
+
+    commonPadding:12,
 };
 
 export  default {

@@ -27,6 +27,7 @@ export default class RefreshFlatList extends Component {
     static LOADING_MORE = 2;//正在加载
     static NO_MORE = 3;//没有更多数据
     static END_REQUEST = 4;//结束请求
+    static EMPTY_DATA = 5;//结束请求
 
     static property = {
         doRefreshData:React.PropTypes.func,
@@ -59,6 +60,7 @@ export default class RefreshFlatList extends Component {
         super(props);
         this.onEndReached = this.onEndReached.bind(this)
         this.defaultListEmptyComponent = this.defaultListEmptyComponent.bind(this)
+        this.defaultItemSeparatorComponent = this.defaultItemSeparatorComponent.bind(this)
     }
 
     _keyExtractor = (item, index) =>index;
@@ -148,10 +150,6 @@ export default class RefreshFlatList extends Component {
             data,
             bindItemViewModel,
             contentContainerStyle,
-            onEndReachedThreshold,
-            ItemSeparatorComponent,
-
-
         } = this.props;
 
         return (
@@ -164,7 +162,7 @@ export default class RefreshFlatList extends Component {
                 onEndReachedThreshold = {0.5}
                 onEndReached = {()=>this.onEndReached()}
                 ListFooterComponent={this.listFooterComponent()}
-                ItemSeparatorComponent={CommonUtils.checkFunction(ItemSeparatorComponent)?ItemSeparatorComponent:this.defaultItemSeparatorComponent}
+                ItemSeparatorComponent={this.defaultItemSeparatorComponent}
                 ListEmptyComponent = {this.defaultListEmptyComponent}
             />
         );
@@ -225,7 +223,14 @@ export default class RefreshFlatList extends Component {
     }
 
     defaultItemSeparatorComponent() {
-        return(<View style={{height:2,backgroundColor:'white'}}/>);
+        const {
+            ItemSeparatorComponent,
+        } = this.props;
+        if (CommonUtils.checkFunction(ItemSeparatorComponent)){
+            return ItemSeparatorComponent();
+        }else {
+            return(<View style={{height:2,backgroundColor:'red'}}/>);
+        }
     }
 
     defaultListEmptyComponent() {
@@ -240,7 +245,7 @@ export default class RefreshFlatList extends Component {
             emptyView = <Text>{StringValue.empty[CommonUtils.randomNum(0,(StringValue.empty.length -1))]}</Text>;
         }
 
-        if (viewStatus === RefreshFlatList.END_REQUEST){
+        if (viewStatus === RefreshFlatList.END_REQUEST && viewStatus === RefreshFlatList.EMPTY_DATA){
             return emptyView;
         }else {
             return <View/>

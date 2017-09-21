@@ -2,11 +2,12 @@
  *===========================================
  * Description:底部菜单栏
  *
- * Author:M-Liu 
+ * Author:M-Liu
  *
  * CrateDate:2017/9/11
  *===========================================
  */
+
 'use strict';
 import React,{Component} from 'react';
 
@@ -21,6 +22,7 @@ import {
 
 import StyleScheme from "../../res/value/StyleScheme";
 import LogUtils from "../../util/LogUtils";
+import CommonUtils from "../../util/CommonUtils";
 
 export default class TabBar extends Component {
 
@@ -53,7 +55,7 @@ export default class TabBar extends Component {
         } = this.props;
         //todo 使用android TouchableNativeFeedback
         return tabs.map((tab,index)=>{
-            return (Platform.OS === 'android'?
+            return (CommonUtils.checkAndroid()?
                     <TouchableOpacity
                         style={styles.itemContainer} key={index} onPress={()=>{goToPage(index)}} activeOpacity={1}>
                         <Image
