@@ -74,6 +74,8 @@ const styles = StyleSheet.create({
         flex:1,
         width:'100%',
         height:450,
+        borderTopLeftRadius:8,
+        borderTopRightRadius:8
     },
      itemImageStyle:{
          flex:1,
@@ -112,6 +114,7 @@ export default class DailyPage extends BaseRefreshComponent{
     };
     constructor(props){
         super(props);
+        this.doLoadData = this.doLoadData.bind(this);
     }
 
     componentWillMount(){
@@ -119,8 +122,9 @@ export default class DailyPage extends BaseRefreshComponent{
     }
 
     renderEmptyView(){
-        return(<Text>暂无数据</Text>)
+        return(<Text style={[{flex:1,alignSelf:'center',marginTop:100,paddingTop:100}]}>暂无数据</Text>)
     }
+
     itemSeparatorComponent() {
         return(<View style={{height:0,backgroundColor:'transparent'}}/>);
     }
@@ -130,27 +134,39 @@ export default class DailyPage extends BaseRefreshComponent{
     }
 
     doRefreshData() {
-        this.mApi.getDailyRecommend('2017-09-20','上海').then(result=>{
-            this.changeNavigator(
-                result.data.weather.city_name
-                +"　"+result.data.weather.climate
-                +"　"+result.data.weather.temperature+"℃");
+        const {date,cityName}=this.props;
+        this.doLoadData(date,cityName);
+    }
+
+    doLoadData(date,cityName){
+        this.setState({viewStatus:RefreshFlatList.REFRESHING});
+        this.mApi.getDailyRecommend(date,cityName).then(result=>{
             switch (result.status){
                 case BaseLoadComponent.Success:
-                    //todo 会多添加一行
-                    // result.data.content_list.splice(1,0,result.data.menu);
-                    this.setState({data:result.data.content_list,menuData:null,viewStatus:RefreshFlatList.END_REQUEST});
+                    this.changeNavigator(
+                        result.data.weather.city_name
+                        +"　"+result.data.weather.climate
+                        +"　"+result.data.weather.temperature+"℃");
+                    let dataList = result.data.content_list;
+                        dataList.splice(1,0,result.data.menu);
+                    this.setState({data:dataList,menuData:null,viewStatus:RefreshFlatList.END_REQUEST});
                     break;
                 case BaseLoadComponent.Empty:
-                    this.setState({viewStatus:RefreshFlatList.EMPTY_DATA});
+                    this.setState({data:null,viewStatus:RefreshFlatList.EMPTY_DATA});
                     break;
                 default:
-
+                    Toast.show(CommonUtils.getNetErrorTip());
                     break;
             }
         });
     }
 
+    componentWillReceiveProps(props){
+        const {date,cityName,refresh}=props;
+        if (refresh){
+            this.doLoadData(date,cityName);
+        }
+    }
 
     changeNavigator(info){
         this.props.changeNavigator(info,CommonUtils.getDailyIcon())
@@ -173,7 +189,7 @@ export default class DailyPage extends BaseRefreshComponent{
                 case '8'://电台
                     return this.renderRadioView(item);
                 case '6'://广告
-                    return<Text>广告</Text>
+                    return<Text>广告</Text>;
                 case '1'://阅读
                 case '2'://连载
                 case '3'://问答
@@ -341,7 +357,7 @@ export default class DailyPage extends BaseRefreshComponent{
                 <Text style={styles.itemTitleStyle}>{item.title}</Text>
                 <Text style={[styles.itemAuthorStyle,{alignSelf:'flex-start'}]}>{'文 / '+item.author.user_name}</Text>
                 <Image
-                    style={styles.itemImageStyle}
+                    style={[styles.itemImageStyle,{borderRadius:16}]}
                     resizeMode={'cover'}
                     source={{uri:item.img_url}} />
                 <Text style={[styles.itemAuthorStyle,{lineHeight:28,alignSelf:'flex-start'}]}>{item.forward}</Text>
@@ -440,7 +456,7 @@ export default class DailyPage extends BaseRefreshComponent{
         );
     }
 
-    renderRadioLastDay() {
+    renderRadioLastDay(item) {
 
         return (<View style={[{
             backgroundColor:'#0008',

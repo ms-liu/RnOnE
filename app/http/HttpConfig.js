@@ -7,11 +7,16 @@
  * Time:2017/9/4
  *===========================================
  */
-import LogUtils from "../util/LogUtils";
 import BaseLoadComponent from "../base/BaseLoadComponent";
 
 export const CACHE_TOGGLE = true;
 export const BASE_URL = 'http://v3.wufazhuce.com:8000/api/';
+/**
+ * 缓存有效时长
+ * max efficient time
+ * @type {number}
+ */
+export const MAX_KEEP_ALIVE_TIME = 1000*60*3;
 
 /**
  * covert response
@@ -39,11 +44,12 @@ export const interceptResponse = response => {
 export const defaultHandleResponse = response => {
     const result = {status:0,data:null,msg:''};
     if (response.res === 0) {
-        result.status = BaseLoadComponent.Success;
         result.data = response.data;
         if (response.data === null || !response.data){
+            result.status = BaseLoadComponent.Empty;
             result.msg = '暂无数据';
         }else {
+            result.status = BaseLoadComponent.Success;
             result.msg = '成功';
         }
     } else {

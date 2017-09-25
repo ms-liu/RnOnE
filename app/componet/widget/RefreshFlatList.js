@@ -83,7 +83,7 @@ export default class RefreshFlatList extends Component {
             case RefreshFlatList.NO_MORE:
                 return(
                     <Text>
-                        {StringValue.noMore[CommonUtils.randomNum(0,StringValue.noMore.length -1)]}
+                        {CommonUtils.getNoMoreDataTip()}
                     </Text>
                 );
             case RefreshFlatList.END_REQUEST:
@@ -95,6 +95,8 @@ export default class RefreshFlatList extends Component {
                         正在努力加载中...
                     </Text>
                 );
+            case RefreshFlatList.EMPTY_DATA:
+                break;
             default:
                 LogUtils.errorMsg('viewStatus is invalid,Current ViewStatus'+viewStatus);
                 break;
@@ -154,6 +156,7 @@ export default class RefreshFlatList extends Component {
 
         return (
             <FlatList
+                {...this.props}
                 data={data}
                 contentContainerStyle = {contentContainerStyle}
                 refreshControl={this.bindRefreshControl()}
@@ -178,14 +181,14 @@ export default class RefreshFlatList extends Component {
         } = this.props;
         switch (viewStatus){
             case RefreshFlatList.REFRESHING:
-                // Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,3)]);
-                // break;
             case RefreshFlatList.LOADING_MORE:
-                Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip-1))]);
+                Toast.show(CommonUtils.getLoadingConflictTip());
                 break;
             case RefreshFlatList.NO_MORE:
             case RefreshFlatList.END_REQUEST:
                 doRefreshData();
+                break;
+            case RefreshFlatList.EMPTY_DATA:
                 break;
             default:
                 LogUtils.errorMsg('viewStatus is invalid,Current ViewStatus'+viewStatus);
@@ -211,10 +214,12 @@ export default class RefreshFlatList extends Component {
                 break;
             case RefreshFlatList.REFRESHING:
             case RefreshFlatList.LOADING_MORE:
-                Toast.show(StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip.length -1))]);
+                Toast.show(CommonUtils.getLoadingConflictTip());
                 break;
             case RefreshFlatList.NO_MORE:
                 LogUtils.logMsg('current no_more');
+                break;
+            case RefreshFlatList.EMPTY_DATA:
                 break;
             default:
                 LogUtils.errorMsg('viewStatus is invalid,Current ViewStatus'+viewStatus);
@@ -242,10 +247,9 @@ export default class RefreshFlatList extends Component {
         if ( CommonUtils.checkFunction(ListEmptyComponent)){
             emptyView =  ListEmptyComponent();
         }else {
-            emptyView = <Text>{StringValue.empty[CommonUtils.randomNum(0,(StringValue.empty.length -1))]}</Text>;
+            emptyView = <Text>{CommonUtils.getEmptyDataTip()}</Text>;
         }
-
-        if (viewStatus === RefreshFlatList.END_REQUEST && viewStatus === RefreshFlatList.EMPTY_DATA){
+        if (viewStatus === RefreshFlatList.END_REQUEST || viewStatus === RefreshFlatList.EMPTY_DATA){
             return emptyView;
         }else {
             return <View/>

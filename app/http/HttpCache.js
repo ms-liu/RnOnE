@@ -7,21 +7,16 @@
  * Time:2017/9/4
  *===========================================
  */
-import {
-    AsyncStorage,
-}from 'react-native';
+'use strict';
 import storage from 'react-native-simple-store';
 import LogUtils from '../util/LogUtils';
 import TimeUtils from '../util/TimeUtils';
 import {interceptResponse,} from'./HttpConfig'
+import * as HttpConfig from "./HttpConfig";
 
 
 export default class HttpCacheManager{
-    /**
-     * 缓存有效时长
-     * @type {number}
-     */
-    MAX_KEEP_ALIVE_TIME = 1000*60*60*30;
+
     /**
      *
      * @param key 缓存秘钥
@@ -31,14 +26,18 @@ export default class HttpCacheManager{
      */
     saveCache = (key,fetchFunc,doCache= true)=>{
         if (!doCache){
-            LogUtils.logMsg('you had closed log info for this url '+key);
+            LogUtils.logMsg('you have closed log info for this url '+key);
             return fetchFunc;
         }
         return fetchFunc.then(value=>{
             if (interceptResponse(value)){ // Confirm current request is valid
                 if (this.getCache(key,true)){//check is exist
+                    // LogUtils.logMsg('=====update cache===='+JSON.stringify(value));
                     this.updateCache(key,value);//exist=>update value
+                    this.deleteCache(key);
+                    storage.save(key,{value:value,date: TimeUtils.getCurrentTimestamp()});//save data to local
                 }else {
+                    // LogUtils.logMsg('=====save cache===='+JSON.stringify(value));
                     storage.save(key,{value:value,date: TimeUtils.getCurrentTimestamp()});//save data to local
                 }
             }
@@ -62,7 +61,7 @@ export default class HttpCacheManager{
            if (isCheck)
                return true;
            if (this.checkEfficient(result.date)){
-               LogUtils.logMsg('Get data from local storage ,the value  = \r\n'+JSON.stringify(result.value));
+               LogUtils.logMsg('Get data from local storage ,the value  = \r\n'+JSON.stringify(result.value)+'\r\ndate = '+TimeUtils.getDate(result.date)+'\r\ntime = '+result.date);
                return result.value;
            }else {
                return false;
@@ -76,7 +75,9 @@ export default class HttpCacheManager{
      * @returns {boolean} True:有效；False:无效
      */
     checkEfficient  = (time)=>{
-        return  (TimeUtils.getCurrentTimestamp() - time) < this.MAX_KEEP_ALIVE_TIME;
+        // LogUtils.logMsg('========='+HttpConfig.MAX_KEEP_ALIVE_TIME);
+        // LogUtils.logMsg(TimeUtils.getCurrentTimestamp()+'=====checkEfficient======'+(TimeUtils.getCurrentTimestamp() - time))
+        return  (TimeUtils.getCurrentTimestamp() - time) < HttpConfig.MAX_KEEP_ALIVE_TIME;
     };
 
     /**

@@ -20,7 +20,7 @@ export default class LogUtils {
     };
    static errorMsg = msg =>{
         if (LogUtils.log_lever !== LogUtils.NOTHING){
-            console.log('RnOnE:'+msg);
+            console.error('RnOnE:'+msg);
         }
     }
 }

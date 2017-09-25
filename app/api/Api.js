@@ -16,7 +16,7 @@ export default class Api{
         this.http = new HttpManager();
     }
 
-    getDate = (date)=>{
+    getDatesOfMonth = (date)=>{
         return this.http.doGet(true)(`feeds/list/${date}${this.COMMON_PARAMETER}`);
     };
 

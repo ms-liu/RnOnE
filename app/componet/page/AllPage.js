@@ -62,21 +62,21 @@ export default class AllPage extends BaseRefreshComponent{
     }
 
     doLoadMoreData() {
-        this.setState({viewStatus:RefreshFlatList.LOADING_MORE});
-        this.mApi.getDate('2018-08').then(result => {
-            if (result.data === null || result.data.length === 0){
-                this.setState({viewStatus:RefreshFlatList.NO_MORE});
-            }else {
-                let newData = this.state.data.concat(result.data);
-                this.setState({data:newData,viewStatus:RefreshFlatList.END_REQUEST});
-            }
-        });
+        // this.setState({viewStatus:RefreshFlatList.LOADING_MORE});
+        // this.mApi.getDate('2018-08').then(result => {
+        //     if (result.data === null || result.data.length === 0){
+        //         this.setState({viewStatus:RefreshFlatList.NO_MORE});
+        //     }else {
+        //         let newData = this.state.data.concat(result.data);
+        //         this.setState({data:newData,viewStatus:RefreshFlatList.END_REQUEST});
+        //     }
+        // });
     }
 
     doRefreshData() {
-        this.mApi.getDate('2017-09').then(result => {
-            this.setState({data:result.data,viewStatus:RefreshFlatList.END_REQUEST});
-        });
+        // this.mApi.getDate('2017-09').then(result => {
+        //     this.setState({data:result.data,viewStatus:RefreshFlatList.END_REQUEST});
+        // });
     }
 
     bindItemViewModel(itemData,index) {

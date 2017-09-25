@@ -20,7 +20,7 @@ export default class TouchView extends Component{
             return(
                 <TouchableNativeFeedback
                     {...this.props}
-                        background={TouchableNativeFeedback.SelectableBackground()}
+                    background={TouchableNativeFeedback.SelectableBackground()}
                 >
                 </TouchableNativeFeedback>
             );

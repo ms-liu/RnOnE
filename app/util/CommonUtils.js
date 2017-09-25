@@ -13,6 +13,7 @@ import {
 }from 'react-native'
 import TimeUtils from "./TimeUtils";
 import LogUtils from "./LogUtils";
+import StringValue from "../res/value/StringValue";
 
 export default class CommonUtils{
     static checkAndroid(){
@@ -25,12 +26,41 @@ export default class CommonUtils{
         return Platform.OS === 'web';
     }
 
+    static checkFunction(func){
+        return typeof func === 'function';
+    }
+
+    static replaceSeparate(src,srcSeparate,desSeparate){
+        srcSeparate = srcSeparate ?srcSeparate:'-';
+        desSeparate = desSeparate?desSeparate:' / ';
+        return src.replace(new RegExp(srcSeparate,'g'),desSeparate);
+    }
+
     static randomNum(min,max){
         return min + Math.round(Math.random()*(max-min));
     }
 
-    static getDailyIcon = ()=>{
-        switch (TimeUtils.getCurrentDayOfMonth()){
+    static getNoMoreDataTip(){
+        return StringValue.noMore[CommonUtils.randomNum(0,StringValue.noMore.length -1)]
+    }
+
+    static getLoadingConflictTip(){
+        return StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip-1))]
+    }
+
+    static getEmptyDataTip(){
+       return StringValue.empty[CommonUtils.randomNum(0,(StringValue.empty.length -1))]
+    }
+
+    static getNetErrorTip(){
+        return StringValue.loadError[CommonUtils.randomNum(0,(StringValue.loadError.length -1))]
+    }
+
+
+
+    static getDailyIcon = (date,separate)=>{
+        let index = date?date.split(separate?separate:'-')[2]:TimeUtils.getCurrentDayOfMonth();
+        switch (parseInt(index)){
             case 1:
                 return require('../res/image/daily/day1.png');
             case 2:
@@ -97,8 +127,9 @@ export default class CommonUtils{
                 return require('../res/image/daily/dayDefault.png');
         }
     };
-    static getActDailyIcon = ()=>{
-        switch (TimeUtils.getCurrentDayOfMonth()){
+    static getActDailyIcon = (date,separate)=>{
+        let index = date?date.split(separate?separate:'-')[2]:TimeUtils.getCurrentDayOfMonth();
+        switch (index){
             case 1:
                 return require('../res/image/daily/day1_act.png');
             case 2:
@@ -166,7 +197,4 @@ export default class CommonUtils{
         }
     };
 
-    static checkFunction(func) {
-        return typeof func === 'function';
-    }
 }

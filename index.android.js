@@ -11,21 +11,41 @@
 import React, { Component } from 'react';
 import {
   AppRegistry,
+    Animated
 } from 'react-native';
 import App from './app';
 import { StackNavigator } from 'react-navigation';
 import CalendarPage from "./app/componet/page/CalendarPage";
-const TestDemoApp = StackNavigator({
-    Home: { screen: App },
+import CardStackStyleInterpolator from "react-navigation/lib-rn/views/CardStackStyleInterpolator";
+import * as Easing from "react-native/Libraries/Animated/src/Easing";
+
+const AppNavigator = StackNavigator({
+    //路由配置 page:{screen:PageComponet}
+    HomePage: { screen: App },
     CalendarPage: { screen: CalendarPage},
 },{
-    initialRouteName: 'Home', // 默认显示界面
-    mode:'card',
-    headerMode:'none',
+    initialRouteName: 'HomePage', // 初始界面
+    mode:'card',//显示模式card
+    headerMode:'none',// enum（float、screen、none）
     cardStack: {
             gesturesEnabled: true,
     },
-    onTransitionStart: ()=>{ console.log('导航栏切换开始'); },  // 回调
-    onTransitionEnd: ()=>{ console.log('导航栏切换结束'); },  // 回调
+    transitionConfig:()=>{
+       return {
+            screenInterpolator: CardStackStyleInterpolator.forHorizontal,
+            transitionSpec: {
+                duration: 250,
+                easing: Easing.bounce,
+                timing: Animated.timing,
+            },
+        }
+    },
+    onTransitionStart: (transitionProps,prevTransitionProps)=>{
+        // console.log('=====onTransitionStart====='+JSON.stringify(transitionProps));
+        // console.log('=====onTransitionStart====='+JSON.stringify(prevTransitionProps));
+    },  // 回调
+    onTransitionEnd: ()=>{
+        // console.log('=========onTransitionEnd====');
+    },  // 回调
 });
-AppRegistry.registerComponent('RnOnE', () => TestDemoApp);
+AppRegistry.registerComponent('RnOnE', () => AppNavigator);

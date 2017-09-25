@@ -100,6 +100,8 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
         const {data,viewStatus,toggleLoadMore}= this.state;
         return(
                 <RefreshFlatList
+                    numColumns={this.getNumColumns()}
+                    columnWrapperStyle = {this.getNumColumns() !== 1?this.getColumnWrapperStyle():null}
                     contentContainerStyle = {styles.flatListStyle}
                     androidRefreshProgressColors={[StyleScheme.colorAccent]}
                     androidProgressBackgroundColor = {StyleScheme.colorPrimary}
@@ -166,6 +168,14 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
      */
     bindItemViewModel(itemData,index) {
         return(<View />);
+    }
+
+    getNumColumns() {
+        return 1
+    }
+
+    getColumnWrapperStyle() {
+
     }
 }
 

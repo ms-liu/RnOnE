@@ -8,14 +8,12 @@
  *===========================================
  */
 
-import React, { Component } from 'react';
+import React  from 'react';
 import {
     StyleSheet,
     Text,
     View,
     Image,
-    TouchableOpacity,
-    TouchableHighlight,
 } from 'react-native';
 
 import LogUtils from './util/LogUtils';
@@ -27,37 +25,35 @@ import StyleScheme from "./res/value/StyleScheme";
 import TimeUtils from "./util/TimeUtils";
 import CommonUtils from "./util/CommonUtils";
 import DailyPage from "./componet/page/DailyPage";
-import AppNavigationBar from "./componet/widget/AppNavigationBar";
 import Toast from "./componet/widget/Toast";
 import AllPage from "./componet/page/AllPage";
+import TouchView from "./componet/widget/TouchView";
 const styles = StyleSheet.create({
 
     navigatorStyle:{
         width:'100%',
+        flex:1,
         position:'absolute',
+        paddingLeft:StyleScheme.commonPadding+25,
+        paddingRight:StyleScheme.commonPadding,
         height:StyleScheme.appBarHeight+24,
         backgroundColor:StyleScheme.colorPrimary,
         paddingTop:24,
-        justifyContent:'center',
         alignItems:'center',
         borderBottomColor:StyleScheme.lineColor,
         borderBottomWidth:1,
+        justifyContent:'space-between',
+        flexDirection:'row'
     },
     navigatorText:{
+        flexGrow:2,
         textAlign:'center',
-        width:'100%',
+        width:'80%',
         color:StyleScheme.textColor,
         fontSize:StyleScheme.barTextSize
     },
-    navigatorButton:{
-        position:'absolute',
-        top:32,
-        right:0,
-        margin:5,
-        width:45,
-        height:45,
-    },
     navigatorIcon:{
+        flexShrink:1,
         tintColor:StyleScheme.tabDefaultColor,
         width:25,
         height:25,
@@ -76,16 +72,20 @@ const TAB_BAR_RESOURCES = [
     [require('./res/image/all.png'), require('./res/image/all_act.png')],
 ];
 
-
+let lastClickTime = 0;
 export default class App extends BaseUIComponent {
     static DAILY_POSITION=0;
     static ALL_POSITION=1;
-    title1 = '';
-
+    static PAGE_STATE_VALUE ={
+        date:TimeUtils.getCurrentDay(),
+        cityName:'上海',
+        title:'NewP',
+    };
     constructor(props){
         super(props);
         this.state = {title:'',icon:''};
         this.mApi = new Api();
+
     }
     componentWillMount(){
         super.componentWillMount();
@@ -108,7 +108,7 @@ export default class App extends BaseUIComponent {
                 });
             },
             (error) =>{
-                LogUtils.errorMsg(JSON.stringify(error));
+                LogUtils.logMsg(JSON.stringify(error));
             },
             {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
         );
@@ -119,33 +119,25 @@ export default class App extends BaseUIComponent {
             title,
             icon,
         }= this.state;
-
-        const {navigate} = this.props.navigation;
-
-
         return (
             <View style={styles.navigatorStyle}>
-                <Text style={styles.navigatorText}>{this.state.title}</Text>
-                <TouchableOpacity style={[styles.navigatorButton,]} onPress={()=>{ navigate('CalendarPage');}}>
+                <Text style={styles.navigatorText}>{title}</Text>
+                <TouchView onPress={()=>{ this.navigateNewPage('CalendarPage',{date:App.PAGE_STATE_VALUE.date});}}>
                     <Image
-                        style={styles.navigatorIcon} source={this.state.icon}/>
-                </TouchableOpacity>
+                        style={styles.navigatorIcon} source={icon}/>
+                </TouchView>
             </View>
         )
     }
 
     renderBody(){
         const _this = this;
+        const {date,cityName,refresh} =this.state;
         return (
             <ScrollableTabView
                 tabBarPosition="bottom"
                 locked={true}
-                onChangeTab={(re)=>{
-                    this.doChangeTitle(re.i);
-                    LogUtils.logMsg('=====currentPage>>>>'+re.i);
-                    LogUtils.logMsg('=====>>>>'+re.ref);
-                    LogUtils.logMsg('=====lastPage>>>>'+re.from);
-                }}
+                onChangeTab={(re)=>{this.doChangeTitle(re.i);}}
                 scrollWithoutAnimation={false}
                 prerenderingSiblingsNumber={2}
                 initialPage={0}
@@ -155,31 +147,53 @@ export default class App extends BaseUIComponent {
                 style={styles.bottomNavigatorStyle}
             >
                 <DailyPage
-                    changeNavigator ={(title)=>{LogUtils.logMsg(title);_this.title1 = title; _this.doChangeTitle(App.DAILY_POSITION)}}
+                    date = {date}
+                    cityName = {cityName}
+                    refresh = {refresh}
+                    changeNavigator ={(title)=>{
+                        App.PAGE_STATE_VALUE.title = title;
+                        _this.doChangeTitle(App.DAILY_POSITION)}}
                 />
                 <AllPage />
             </ScrollableTabView>
         );
     }
 
-    onIconClick() {
-        // Toast.show('查看日历');
-
-        // {title:item.value}
-
-
-    }
-
     doChangeTitle(index) {
-        const _this = this;
         switch (index){
             case App.ALL_POSITION:
                 this.setState({title:TimeUtils.getCurrentDay(' / '),icon:CommonUtils.getDailyIcon()});
                 break;
             case App.DAILY_POSITION:
             default:
-                this.setState({title:_this.title1,icon:CommonUtils.getDailyIcon()});
+                this.setDailyPageState();
                 break;
         }
     }
+
+    onBackAndroid(){
+        let now = new Date().getTime();
+        if ((now - lastClickTime) < 3000) {//2.5秒内点击后退键两次推出应用程序
+            return false;
+        }
+        lastClickTime = now;
+        Toast.show('再按一次退出');
+        return true;
+    }
+
+    navigatorCallback(result){
+        App.PAGE_STATE_VALUE.date = result.date;
+        this.setDailyPageState(true);
+    }
+
+    setDailyPageState(refresh=false){
+        this.setState({
+            title:App.PAGE_STATE_VALUE.title,
+            date:App.PAGE_STATE_VALUE.date,
+            cityName:App.PAGE_STATE_VALUE.cityName,
+            refresh:refresh,
+            icon:CommonUtils.getDailyIcon(App.PAGE_STATE_VALUE.date)
+        });
+    }
+
 }

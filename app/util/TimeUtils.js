@@ -34,6 +34,19 @@ export default class TimeUtils{
         return  new Date().getMonth()+1;
     };
 
+    static getYearOfMoth = (month)=>{
+        return month>0?month:(Math.abs(month)%12+1);
+    };
+
+    static getDateOfMonth = (month = TimeUtils.getCurrentMonth())=>{
+        let year = TimeUtils.getCurrentYear();
+        if (month <= 0){
+            year -= Math.floor((Math.abs(month)/12)+1);
+        }
+        month = TimeUtils.getYearOfMoth(month);
+        return year +'-'+month;
+    };
+
     static parserDate = (date)=>{
         date = (date+'').split(' ')[0];
         if ( date.toString() === TimeUtils.getCurrentDay()){
@@ -47,6 +60,13 @@ export default class TimeUtils{
            }
 
         }
+    };
+
+    static getDate = (timeStamp,format = 'yyyy-MM-dd h:m:s')=>{
+        let date = new Date();
+        date.setTime(parseInt(timeStamp));
+        LogUtils.logMsg('------'+format);
+        return date.toLocaleString()
     }
 
 }

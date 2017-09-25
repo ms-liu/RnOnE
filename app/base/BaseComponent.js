@@ -18,10 +18,13 @@ import {
 import LogUtils from "../util/LogUtils";
 import OrientationIOS from 'react-native-orientation'
 import Toast from "../componet/widget/Toast";
-let lastClickTime = 0;
+import NavigationActions from "../../node_modules/react-navigation/lib-rn/NavigationActions";
+
 export default  class BaseComponent extends Component{
     constructor(props){
         super(props);
+        this.loadData = this.loadData.bind(this);
+        this.onBackAndroid = this.onBackAndroid.bind(this);
         const {Orientation: OrientationAndroid} = NativeModules;
         let Orientation;
         if (Platform.OS === 'ios') {
@@ -31,6 +34,7 @@ export default  class BaseComponent extends Component{
         }
         this.controlOrientation(Orientation);
     };
+
     static navigationOptions  = {
         title:'NewP',
         gesturesEnabled:true,
@@ -39,10 +43,54 @@ export default  class BaseComponent extends Component{
         }
     };
 
-    // static StackNavigatorConfig={
-    //     initialRouteName:'',
-    //     mode:'none',
-    // };
+    getNavigation(context){
+        context = context?context:this;
+        return context.props.navigation;
+    }
+
+    getNavigationState(context){
+        context = context?context:this;
+        return context.props.navigation.state;
+    }
+
+    getNavigationParams(context){
+        context = context?context:this;
+        try{
+            return context.props.navigation.state.params;
+        }catch (e){
+            LogUtils.errorMsg('last page don\'t carry any params ');
+        }
+    }
+
+    navigateNewPage(pageName,params,context){
+        context = context?context:this;
+        if (params){
+            params['navigatorCallback'] = (result)=>context.navigatorCallback(result);
+        }else {
+            params = {navigatorCallback:(result)=>context.navigatorCallback(result)};
+        }
+        context.props.navigation.navigate(pageName,params);
+    }
+
+    goBack(context){
+        context = context?context:this;
+        context.props.navigation.goBack();
+    }
+
+    reset(pageName,params,context){
+        const resetAction = NavigationActions.reset({
+            index: 0,
+            actions: [
+                NavigationActions.navigate({routeName: pageName, params: params})
+            ]
+        });
+        context = context?context:this;
+        context.props.navigation.dispatch(resetAction);
+    }
+
+    navigatorCallback(result){
+
+    }
 
     /**
      * 屏幕方向控制
@@ -107,13 +155,7 @@ export default  class BaseComponent extends Component{
     }
 
     onBackAndroid() {
-        let now = new Date().getTime();
-        if (now - lastClickTime < 1500) {//2.5秒内点击后退键两次推出应用程序
-            return false;//控制权交给原生
-        }
-        lastClickTime = now;
-        Toast.show('再按一次退出');
-        return true;
+        return false;
     }
 
     /**

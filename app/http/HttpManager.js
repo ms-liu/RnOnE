@@ -75,7 +75,7 @@ export default class HttpManager extends Component{
      *  @doCache true do cache ;false not cache
      * */
     doGetRequest =(url,doCache = true)=>{
-        LogUtils.logMsg('do get request \r\n url '+url+'\r\n& doCache = '+doCache);
+        // LogUtils.logMsg('do get request \r\n url '+url+'\r\n& doCache = '+doCache);
         return this.doRequest(url,'GET',null,doCache);
     };
 
@@ -86,7 +86,7 @@ export default class HttpManager extends Component{
      * @doCache true do cache ;false not cache
      * */
     doPostRequest = (url,jsonPostData,doCache = false) =>{
-        LogUtils.logMsg('do post request \r\n url '+url+'\r\n post data = '+jsonPostData+'\r\n& doCache = '+doCache);
+        // LogUtils.logMsg('do post request \r\n url '+url+'\r\n post data = '+jsonPostData+'\r\n& doCache = '+doCache);
         return this.doRequest(url,'POST',jsonPostData,doCache);
     };
 
@@ -134,11 +134,11 @@ export default class HttpManager extends Component{
      * @param requestInfo
      */
     printRequest = requestInfo => fetchFunc =>{
-        let startTime = TimeUtils.getCurrentTimestamp();
+        // let startTime = TimeUtils.getCurrentTimestamp();
         return fetchFunc().then(result => {
-            LogUtils.logMsg(`${requestInfo} : 
-            \r\nresult = ${JSON.stringify(result)};
-            \r\ntook time = ${ TimeUtils.getCurrentTimestamp() - startTime}ms`);
+            // LogUtils.logMsg(`${requestInfo} :
+            // \r\nresult = ${JSON.stringify(result)};
+            // \r\ntook time = ${ TimeUtils.getCurrentTimestamp() - startTime}ms`);
             return result;
         }).catch(err => {
             LogUtils.logMsg(`${requestInfo} ${err}`);
