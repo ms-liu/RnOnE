@@ -9,7 +9,7 @@
  *===========================================
  */
 
-import React,{Component} from 'react';
+import React,{PureComponent} from 'react';
 import StyleScheme from '../../res/value/StyleScheme';
 import {
     StyleSheet,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     },
 });
 
-export default class BottomNavigationBar extends Component {
+export default class BottomNavigationBar extends PureComponent {
     render(){
         return(
             <View style={[styles.bottomStyle]} >

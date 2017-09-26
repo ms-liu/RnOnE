@@ -32,14 +32,9 @@ export default class HttpCacheManager{
         return fetchFunc.then(value=>{
             if (interceptResponse(value)){ // Confirm current request is valid
                 if (this.getCache(key,true)){//check is exist
-                    // LogUtils.logMsg('=====update cache===='+JSON.stringify(value));
-                    this.updateCache(key,value);//exist=>update value
                     this.deleteCache(key);
-                    storage.save(key,{value:value,date: TimeUtils.getCurrentTimestamp()});//save data to local
-                }else {
-                    // LogUtils.logMsg('=====save cache===='+JSON.stringify(value));
-                    storage.save(key,{value:value,date: TimeUtils.getCurrentTimestamp()});//save data to local
                 }
+                storage.save(key,{value:value,date: TimeUtils.getCurrentTimestamp()});//save data to local
             }
             return value;
         }).catch(err=>{

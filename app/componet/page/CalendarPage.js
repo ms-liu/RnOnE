@@ -152,8 +152,10 @@ class CalendarContentPage extends BaseRefreshComponent {
         this.mApi.getDatesOfMonth(date).then(result=>{
             if(result.status === BaseLoadComponent.Success){
                 let dataList = result.data;
-                dataList.splice(0,0,{month:TimeUtils.getYearOfMoth(expectMonth),index:0});
-                dataList.splice(1,0,{month:TimeUtils.getYearOfMoth(expectMonth),index:1});
+                if (!dataList[0].month){
+                    dataList.splice(0,0,{month:TimeUtils.getYearOfMoth(expectMonth),index:0});
+                    dataList.splice(1,0,{month:TimeUtils.getYearOfMoth(expectMonth),index:1});
+                }
                 if(dataList.length%2 !== 0){
                     dataList.push({date:'',cover:''})
                 }

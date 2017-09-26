@@ -12,13 +12,13 @@
 
 
 'use strict';
-import React,{Component} from 'react';
+import React,{Component,PureComponent} from 'react';
 
 import Swiper  from 'react-native-swiper'
 import TouchView from "./TouchView";
 import CommonUtils from "../../util/CommonUtils";
 
-export default class AutoCarouselComponent extends Component{
+export default class AutoCarouselComponent extends PureComponent{
     static property = {
         loadCarouseData:React.PropTypes.func,
         onItemClickCallback:React.PropTypes.func,
@@ -52,7 +52,8 @@ export default class AutoCarouselComponent extends Component{
                     autoplay = {true}
                     dot={this.renderSwiperDotView()}
                     activeDotColor={'white'}
-                    removeClippedSubviews={true}
+                    autoplayTimeout={5}
+                    removeClippedSubviews={false}
                     paginationStyle={{
                         top: 12,
                         left: 0,

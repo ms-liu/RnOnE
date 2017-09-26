@@ -10,7 +10,7 @@
 
 
 'use strict';
-import React,{Component} from 'react';
+import React,{PureComponent} from 'react';
 
 import {
     Image,
@@ -27,7 +27,7 @@ import CommonUtils from "../../util/CommonUtils";
 import TouchView from "./TouchView";
 import TimeUtils from "../../util/TimeUtils";
 
-export default class TabBar extends Component {
+export default class TabBar extends PureComponent {
 
    static property = {
         tabBarResources: React.PropTypes.array.isRequired,

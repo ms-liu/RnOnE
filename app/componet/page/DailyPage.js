@@ -148,7 +148,9 @@ export default class DailyPage extends BaseRefreshComponent{
                         +"　"+result.data.weather.climate
                         +"　"+result.data.weather.temperature+"℃");
                     let dataList = result.data.content_list;
+                    if (!dataList[1].list){
                         dataList.splice(1,0,result.data.menu);
+                    }
                     this.setState({data:dataList,menuData:null,viewStatus:RefreshFlatList.END_REQUEST});
                     break;
                 case BaseLoadComponent.Empty:

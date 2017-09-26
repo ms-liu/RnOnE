@@ -11,14 +11,14 @@
  */
 'use strict';
 
-import React,{Component} from 'react';
+import React,{PureComponent} from 'react';
 import {} from 'react-native';
 import CommonUtils from "../../util/CommonUtils";
 import {ScrollView} from "react-native";
 import TouchView from "./TouchView";
 
 
-export default class HorizontalScrollComponent extends Component{
+export default class HorizontalScrollComponent extends PureComponent{
 
     static property = {
         loadScrollData:React.PropTypes.func,

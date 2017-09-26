@@ -8,7 +8,7 @@
  *===========================================
  */
 'use strict';
-import React,{Component} from 'react'
+import React,{Component,PureComponent} from 'react'
 import {
     Platform,
     NativeModules,
@@ -20,7 +20,7 @@ import OrientationIOS from 'react-native-orientation'
 import Toast from "../componet/widget/Toast";
 import NavigationActions from "../../node_modules/react-navigation/lib-rn/NavigationActions";
 
-export default  class BaseComponent extends Component{
+export default  class BaseComponent extends PureComponent{
 
 
     constructor(props){

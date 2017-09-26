@@ -133,6 +133,7 @@ const styles = StyleSheet.create({
         alignItems:'center',
     },
     commonItemImageStyle:{
+        borderRadius:4,
         flex:1,
         width:'100%',
         height:200,
@@ -269,7 +270,11 @@ export default class AllPage extends BaseRefreshComponent{
            return(
                <TouchView  onPress={()=>{this.onClickCommonItem(index,itemData)}}>
                    <View style={styles.commonItem}>
-                        <Image source={{uri:itemData.cover}}  style={styles.commonItemImageStyle}/>
+                       <Image source={{uri:itemData.cover}}  style={styles.commonItemImageStyle}>
+                           <View style={styles.questionTagBg}>
+                               <Text style={styles.questionTagStyle}>{StringValue.questionTag}</Text>
+                           </View>
+                       </Image>
                        <Text style={styles.commonItemTextStyle}>{itemData.title}</Text>
                    </View>
                </TouchView>

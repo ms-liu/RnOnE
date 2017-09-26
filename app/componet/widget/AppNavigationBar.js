@@ -9,7 +9,7 @@
  *===========================================
  */
 
-import React,{Component,PropTypes} from 'react';
+import React,{Component,PureComponent} from 'react';
 import StyleScheme from '../../res/value/StyleScheme'
 import {
     StyleSheet,
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
         height:StyleScheme.appBarHeight,
     },
 });
-export default class AppNavigationBar extends Component{
+export default class AppNavigationBar extends PureComponent{
     static property ={
         height:React.PropTypes.number
     };

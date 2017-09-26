@@ -9,7 +9,7 @@
  * Email:ms_liu163@163.com
  *===========================================
  */
-import React,{Component} from 'react';
+import React,{PureComponent} from 'react';
 import {}from 'react-native';
 import {Platform,FlatList,View} from "react-native";
 import LogUtils from "../../util/LogUtils";
@@ -22,7 +22,7 @@ import CommonUtils from "../../util/CommonUtils";
 import StyleScheme from "../../res/value/StyleScheme";
 
 
-export default class RefreshFlatList extends Component {
+export default class RefreshFlatList extends PureComponent {
     static REFRESHING = 1;//正在刷新
     static LOADING_MORE = 2;//正在加载
     static NO_MORE = 3;//没有更多数据

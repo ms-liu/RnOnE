@@ -10,11 +10,11 @@
  *===========================================
  */
 'use strict';
-import React,{Component} from 'react';
+import React,{Component,PureComponent} from 'react';
 import {TouchableHighlight,TouchableNativeFeedback} from 'react-native';
 import CommonUtils from '../../util/CommonUtils'
 
-export default class TouchView extends Component{
+export default class TouchView extends PureComponent{
     render(){
         if (CommonUtils.checkAndroid()){
             return(
