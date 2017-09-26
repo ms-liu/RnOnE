@@ -29,6 +29,9 @@ export default class CommonUtils{
     static checkFunction(func){
         return typeof func === 'function';
     }
+    static checkArray(arr){
+        return Object.prototype.toString.call(arr) ==='[object Array]';
+    }
 
     static replaceSeparate(src,srcSeparate,desSeparate){
         srcSeparate = srcSeparate ?srcSeparate:'-';
@@ -45,7 +48,7 @@ export default class CommonUtils{
     }
 
     static getLoadingConflictTip(){
-        return StringValue.loadingConflictTip[CommonUtils.randomNum(0,(StringValue.loadingConflictTip-1))]
+        return StringValue.loadingConflictTip[CommonUtils.randomNum(0,StringValue.loadingConflictTip.length-1)]
     }
 
     static getEmptyDataTip(){

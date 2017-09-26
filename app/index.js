@@ -114,6 +114,19 @@ export default class App extends BaseUIComponent {
         );
         this.doChangeTitle(App.DAILY_POSITION);
     }
+
+    onHeaderIconClick() {
+        switch (this.currentIndex){
+            case App.DAILY_POSITION:
+                this.navigateNewPage('CalendarPage',{date:App.PAGE_STATE_VALUE.date});
+                break;
+            case App.ALL_POSITION:
+            default:
+                Toast.show('搜搜');
+                break;
+        }
+    }
+
     renderNavigator(){
         const {
             title,
@@ -122,7 +135,7 @@ export default class App extends BaseUIComponent {
         return (
             <View style={styles.navigatorStyle}>
                 <Text style={styles.navigatorText}>{title}</Text>
-                <TouchView onPress={()=>{ this.navigateNewPage('CalendarPage',{date:App.PAGE_STATE_VALUE.date});}}>
+                <TouchView onPress={()=>{this.onHeaderIconClick()}}>
                     <Image
                         style={styles.navigatorIcon} source={icon}/>
                 </TouchView>
@@ -142,7 +155,7 @@ export default class App extends BaseUIComponent {
                 prerenderingSiblingsNumber={2}
                 initialPage={0}
                 renderTabBar={()=>{
-                    return <TabBar tabBarResources={TAB_BAR_RESOURCES}/>
+                    return <TabBar  tabBarResources={TAB_BAR_RESOURCES}/>
                 }}
                 style={styles.bottomNavigatorStyle}
             >
@@ -160,9 +173,10 @@ export default class App extends BaseUIComponent {
     }
 
     doChangeTitle(index) {
+        this.currentIndex = index;
         switch (index){
             case App.ALL_POSITION:
-                this.setState({title:TimeUtils.getCurrentDay(' / '),icon:CommonUtils.getDailyIcon()});
+                this.setState({title:'NewP',icon:require('./res/image/search_night.png')});
                 break;
             case App.DAILY_POSITION:
             default:

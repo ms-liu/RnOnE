@@ -175,3 +175,90 @@ data: [
     }
 }
 ```
+### 获取轮播图广告数据
+```
+/banner/list/3
+```
+```
+{
+    res: 0,
+    data: [
+        {
+        id: 58,
+        cover: "http://image.wufazhuce.com/FsvScTuR0XicLrT3CDFMdhgQ401z?bid=58",
+        title: "三十啊，你自己的感觉不重要，但是，赢很重要。",
+        category: 11,
+        content_id: "53",
+        is_stick: false,
+        serial_list: [ ],
+        link_url: ""
+        },
+    ]
+}
+```
+### 获取问答数据
+```
+/banner/list/5
+```
+```
+{
+    res: 0,
+    data: [
+        {
+            id: 45,
+            cover: "http://image.wufazhuce.com/Fv9ct_J6gGhQWhvZe6oH5Zm2JIAl?bid=45",
+            title: "梦想也会长大，不过是朝着童年的方向",
+            category: 11,
+            content_id: "44",
+            is_stick: false,
+            serial_list: [ ],
+            link_url: ""
+        },
+    ]
+}
+```
+### 获取热门作者数据
+```
+/author/hot
+```
+```
+{
+    res: 0,
+    data: [
+        {
+            user_id: "4813382",
+            user_name: "张晓晗",
+            desc: "作家、编剧、银河系少先队大队长。已出版《女王乔安》、《少年博物馆》等。@张晓晗Oliver，ID：银河系会玩。",
+            wb_name: "@张晓晗Oliver",
+            is_settled: "0",
+            settled_type: "0",
+            summary: "作家、编剧、银河系少先队大队长。",
+            fans_total: "21209",
+            web_url: "http://image.wufazhuce.com/FpKk2mb_wawSFx-qMyvollJW4PdX"
+        },
+    ]
+}
+```
+### 获取专题列表数据
+```
+/list/4?last_id=参数
+```
+- 参数1：上次数据的最后一个id
+- 例：last_id=47,
+```
+{
+    res: 0,
+    data: [
+        {
+            id: 36,
+            cover: "http://image.wufazhuce.com/Fmpg6qp8mplRrhw51pnibPJrP3_4?bid=36",
+            title: "民谣不是陈词滥调，只是故事发了酵。",
+            category: 11,
+            content_id: "16",
+            is_stick: false,
+            serial_list: [ ],
+            link_url: ""
+        },
+    ]
+}
+```

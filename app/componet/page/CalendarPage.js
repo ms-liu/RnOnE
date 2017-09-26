@@ -157,7 +157,6 @@ class CalendarContentPage extends BaseRefreshComponent {
                 if(dataList.length%2 !== 0){
                     dataList.push({date:'',cover:''})
                 }
-                LogUtils.logMsg('==========='+JSON.stringify(result.data));
                 data = refresh ? dataList : data.concat(dataList);
                 this.setState({data:data,endIndex:data.length -1,viewStatus:RefreshFlatList.END_REQUEST});
                 this.month = expectMonth;

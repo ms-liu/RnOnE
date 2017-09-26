@@ -45,7 +45,7 @@ export const defaultHandleResponse = response => {
     const result = {status:0,data:null,msg:''};
     if (response.res === 0) {
         result.data = response.data;
-        if (response.data === null || !response.data){
+        if (response.data === null || !response.data || result.data.length <=0){
             result.status = BaseLoadComponent.Empty;
             result.msg = '暂无数据';
         }else {

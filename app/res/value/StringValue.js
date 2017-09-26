@@ -21,5 +21,10 @@ export default {
     loadError:['网络有点不给力唷~','>w<すみません！','唉哟~网络狗带了','a~u~,WangLuo died now'],
     empty:['找不到对象，怪我咯~\r\n Can\'t find object，Is my fault?',],
     noMore:['已经到底了，不信上拉试试\r\nI have Done my best','484傻~已经没有了\r\nAre you Silly-X?'],
-    errorTip:['出Bug了~~~\r\nThrow an Bug']
+    errorTip:['出Bug了~~~\r\nThrow an Bug'],
+
+    questionTitle: '所有人都在问',
+    hotAuthorTitle: '近期热门作者',
+    questionTag: '专题',
+    topicTag:'#'
 }

@@ -65,8 +65,7 @@ export default class TimeUtils{
     static getDate = (timeStamp,format = 'yyyy-MM-dd h:m:s')=>{
         let date = new Date();
         date.setTime(parseInt(timeStamp));
-        LogUtils.logMsg('------'+format);
-        return date.toLocaleString()
+        return date.toLocaleString();
     }
 
 }

@@ -8,6 +8,7 @@
  *===========================================
  */
 
+
 'use strict';
 import React,{Component} from 'react';
 
@@ -23,12 +24,15 @@ import {
 import StyleScheme from "../../res/value/StyleScheme";
 import LogUtils from "../../util/LogUtils";
 import CommonUtils from "../../util/CommonUtils";
+import TouchView from "./TouchView";
+import TimeUtils from "../../util/TimeUtils";
 
 export default class TabBar extends Component {
 
    static property = {
         tabBarResources: React.PropTypes.array.isRequired,
-        activeTab: React.PropTypes.number,
+       goToPage: React.PropTypes.func,
+       activeTab: React.PropTypes.number,
         tabs: React.PropTypes.array
     };
 
@@ -53,11 +57,16 @@ export default class TabBar extends Component {
             tabs,
             goToPage,
         } = this.props;
-        //todo 使用android TouchableNativeFeedback
         return tabs.map((tab,index)=>{
-            return (CommonUtils.checkAndroid()?
-                    <TouchableOpacity
-                        style={styles.itemContainer} key={index} onPress={()=>{goToPage(index)}} activeOpacity={1}>
+            return (
+                <TouchView key={index} onPress={()=>{
+                    // LogUtils.logMsg('=====1=='+TimeUtils.getCurrentTimestamp());
+                    goToPage(index);
+                    // LogUtils.logMsg('===2===='+TimeUtils.getCurrentTimestamp());
+
+                }}>
+                    <View
+                        style={styles.itemContainer} >
                         <Image
                             style={[styles.itemImage,
                                 activeTab === index?{tintColor:StyleScheme.colorAccent}:{tintColor:StyleScheme.tabDefaultColor}]}
@@ -67,12 +76,8 @@ export default class TabBar extends Component {
                                 activeTab === index?{color:StyleScheme.colorAccent}:{color:StyleScheme.tabDefaultColor}]} >
                             {index===0?'Daily':'All'}
                             </Text>
-                    </TouchableOpacity>
-                :
-                <TouchableOpacity style={styles.itemContainer} key={index} onpress={()=>{goToPage(index)}} activeOpacity={1}>
-                    <Image style={styles.itemImage} source={tabBarResources[index][activeTab === index ? 1 : 0]}/>
-                    <Text>{index===0?'Daily':'All'}</Text>
-                </TouchableOpacity>
+                    </View>
+                </TouchView>
             )
 
         });

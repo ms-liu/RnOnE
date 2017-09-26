@@ -208,15 +208,14 @@ export default class RefreshFlatList extends Component {
         if (!toggleLoadMore)
             return;
         switch (viewStatus){
-
             case RefreshFlatList.END_REQUEST:
                 doLoadMoreData();
                 break;
             case RefreshFlatList.REFRESHING:
-            case RefreshFlatList.LOADING_MORE:
                 Toast.show(CommonUtils.getLoadingConflictTip());
                 break;
             case RefreshFlatList.NO_MORE:
+            case RefreshFlatList.LOADING_MORE:
                 LogUtils.logMsg('current no_more');
                 break;
             case RefreshFlatList.EMPTY_DATA:

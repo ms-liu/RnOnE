@@ -47,6 +47,10 @@ const styles = StyleSheet.create({
 });
 
 export default class BaseRefreshComponent extends BaseLoadComponent{
+
+    static HEADER_HIDE = 0;
+    static HEADER_SHOW = 1;
+
     constructor(props){
         super(props);
         this.bindItemViewModel = this.bindItemViewModel.bind(this);
@@ -100,7 +104,9 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
         const {data,viewStatus,toggleLoadMore}= this.state;
         return(
                 <RefreshFlatList
+                    removeClippedSubviews={true}
                     numColumns={this.getNumColumns()}
+                    ListHeaderComponent = {this.parserHeaderComponent()}
                     columnWrapperStyle = {this.getNumColumns() !== 1?this.getColumnWrapperStyle():null}
                     contentContainerStyle = {styles.flatListStyle}
                     androidRefreshProgressColors={[StyleScheme.colorAccent]}
@@ -176,6 +182,23 @@ export default class BaseRefreshComponent extends BaseLoadComponent{
 
     getColumnWrapperStyle() {
 
+    }
+
+    renderHeaderComponent() {
+
+    }
+
+    parserHeaderComponent() {
+        const {
+            headerStatus,
+        }= this.state;
+        switch (headerStatus){
+            case BaseRefreshComponent.HEADER_SHOW:
+                return this.renderHeaderComponent();
+            case BaseRefreshComponent.HEADER_HIDE:
+            default:
+                return(<View/>);
+        }
     }
 }
 

@@ -21,6 +21,8 @@ import Toast from "../componet/widget/Toast";
 import NavigationActions from "../../node_modules/react-navigation/lib-rn/NavigationActions";
 
 export default  class BaseComponent extends Component{
+
+
     constructor(props){
         super(props);
         this.loadData = this.loadData.bind(this);
