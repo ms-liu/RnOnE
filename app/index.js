@@ -36,9 +36,8 @@ const styles = StyleSheet.create({
         position:'absolute',
         paddingLeft:StyleScheme.commonPadding+25,
         paddingRight:StyleScheme.commonPadding,
-        height:StyleScheme.appBarHeight+24,
+        height:StyleScheme.appBarHeight,
         backgroundColor:StyleScheme.colorPrimary,
-        paddingTop:24,
         alignItems:'center',
         borderBottomColor:StyleScheme.lineColor,
         borderBottomWidth:1,
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     },
 
     bottomNavigatorStyle:{
-        paddingTop:StyleScheme.appBarHeight+24,
+        paddingTop:StyleScheme.appBarHeight,
         height:StyleScheme.bottomBarHeight,
         width:'100%',
     },
@@ -163,11 +162,16 @@ export default class App extends BaseUIComponent {
                     date = {date}
                     cityName = {cityName}
                     refresh = {refresh}
+                    onItemClick = {(item)=>{this.handleItemClick(item);}}
+                    onMenuItemClick = {(item)=>{this.handleItemClick(item,true)}}
                     changeNavigator ={(title)=>{
                         App.PAGE_STATE_VALUE.title = title;
-                        _this.doChangeTitle(App.DAILY_POSITION)}}
+                        _this.doChangeTitle(App.DAILY_POSITION)}
+                    }
                 />
-                <AllPage />
+                <AllPage
+
+                />
             </ScrollableTabView>
         );
     }
@@ -210,4 +214,40 @@ export default class App extends BaseUIComponent {
         });
     }
 
+    handleItemClick(item,isMenu) {
+        let title = '';
+        switch (!isMenu?item.category:item.content_type){
+            case '0'://图文
+                title = '图文';
+                break;
+            case '4'://音乐
+                title = '音乐';
+                break;
+            case '5'://影视
+                title = '影视';
+                break;
+            case '8'://电台
+                title = '电台';
+                break;
+            case '6'://广告
+                title = '广告';
+                break;
+            case '1'://阅读
+                title = '阅读';
+                break;
+            case '2'://连载
+                title = '连载';
+                break;
+            case '3'://问答
+                title = '问答';
+                break;
+            default:
+                title = 'NewP';
+                break;
+        }
+        title = !isMenu?(item.tag_list.length>0?item.tag_list[0].title:title):(item.tag?item.tag.title:title);
+        let contentId = !isMenu?item.item_id:item.content_id;
+        let bgColor = !isMenu?item.content_bgcolor:'';
+        this.navigateNewPage('DetailPage',{title:title,contentId:contentId,bgColor:bgColor});
+    }
 }

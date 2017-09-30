@@ -9,8 +9,6 @@
  * Email:ms_liu163@163.com
  *===========================================
  */
-
-
 'use strict';
 import React,{Component} from 'react';
 import {
@@ -97,15 +95,10 @@ const styles = StyleSheet.create({
         fontSize:StyleScheme.commonTipTextSize,
     },
     itemMusicCoverStyle:{
-
         width:200,
         height:200,
         borderRadius:100,
     }
-
-
-
-
 });
 
 export default class DailyPage extends BaseRefreshComponent{
@@ -115,6 +108,8 @@ export default class DailyPage extends BaseRefreshComponent{
     constructor(props){
         super(props);
         this.doLoadData = this.doLoadData.bind(this);
+        this.onItemClick = this.onItemClick.bind(this);
+        this.onMenuItemClick = this.onMenuItemClick.bind(this);
     }
 
     componentWillMount(){
@@ -242,22 +237,27 @@ export default class DailyPage extends BaseRefreshComponent{
                                 case '8'://电台
                                     title =  item.tag?item.tag.title:'电台';
                                     break;
+
+                                case '3':
+                                    title =  item.tag?item.tag.title:'问答';
+                                    break;
                                 case '1'://阅读
                                 case '2':
-                                case '3':
                                 default:
                                     title =  item.tag?item.tag.title:'阅读';
                                     title =  item.serial_list?'连载':title;
                                     break;
                             }
                             return(
-                                <View style={[{flexDirection:'row',width:'100%',justifyContent:'flex-start',alignItems:'center',padding:12}]}>
-                                    <Image style={[{width:15,height:15,marginHorizontal:12}]} source={require('../../res/image/arrow_right.png')}/>
-                                    <View>
-                                        <Text>{title}</Text>
-                                        <Text>{item.title}</Text>
+                                <TouchView onPress={()=>this.onMenuItemClick(item)}>
+                                    <View style={[{flexDirection:'row',width:'100%',justifyContent:'flex-start',alignItems:'center',padding:12}]}>
+                                        <Image style={[{width:15,height:15,marginHorizontal:12}]} source={require('../../res/image/arrow_right.png')}/>
+                                        <View>
+                                            <Text>{title}</Text>
+                                            <Text>{item.title}</Text>
+                                        </View>
                                     </View>
-                                </View>
+                                </TouchView>
                             )
                         }}
                     />
@@ -268,45 +268,48 @@ export default class DailyPage extends BaseRefreshComponent{
 
     renderBookView(item) {
         return (
-            <View style={styles.itemStyle}>
-                <Image
-                    style={styles.itemCoverImageStyle}
-                    resizeMode={'cover'}
-                    source={{uri:item.img_url}}  />
-                <Text style={styles.itemAuthorStyle}>{item.title+' | '+item.pic_info}</Text>
-                <Text style={[styles.itemContentStyle,{paddingHorizontal:34,lineHeight:28}]}>{item.forward}</Text>
-                <Text style={[styles.itemAuthorStyle,{padding:24}]}>{item.words_info}</Text>
-                <View
-                    style={[{
-                        padding:StyleScheme.commonPadding<<1,
-                        width:'100%',
-                        flexDirection:'row',
-                        justifyContent:'space-between',
-                        alignItems:'flex-start',
-                    }]}
-                >
-                    <View    style={[{
-                        flexDirection:'row',
-                        alignItems:'flex-start',
-                    }]}>
-                        <Image style={[{width:20,height:20,marginRight:5}]} source={require('../../res/image/bubble_diary.png')}/>
-                        <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>小记</Text>
-                    </View>
-                    <View  style={[{
-                        flexDirection:'row',
-                        alignItems:'flex-start',
-                    }]}>
-                        <Image style={[{alignSelf:'flex-end',width:20,height:20,marginHorizontal:5}]} source={require('../../res/image/bubble_like.png')}/>
-                        <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{item.like_count}</Text>
-                        <Image style={[{alignSelf:'flex-end',width:20,height:20,marginLeft:12}]} source={require('../../res/image/bubble_share.png')}/>
+            <TouchView onPress={()=>this.onItemClick(item)}>
+                <View style={styles.itemStyle}>
+                    <Image
+                        style={styles.itemCoverImageStyle}
+                        resizeMode={'cover'}
+                        source={{uri:item.img_url}}  />
+                    <Text style={styles.itemAuthorStyle}>{item.title+' | '+item.pic_info}</Text>
+                    <Text style={[styles.itemContentStyle,{paddingHorizontal:34,lineHeight:28}]}>{item.forward}</Text>
+                    <Text style={[styles.itemAuthorStyle,{padding:24}]}>{item.words_info}</Text>
+                    <View
+                        style={[{
+                            padding:StyleScheme.commonPadding<<1,
+                            width:'100%',
+                            flexDirection:'row',
+                            justifyContent:'space-between',
+                            alignItems:'flex-start',
+                        }]}
+                    >
+                        <View    style={[{
+                            flexDirection:'row',
+                            alignItems:'flex-start',
+                        }]}>
+                            <Image style={[{width:20,height:20,marginRight:5}]} source={require('../../res/image/bubble_diary.png')}/>
+                            <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>小记</Text>
+                        </View>
+                        <View  style={[{
+                            flexDirection:'row',
+                            alignItems:'flex-start',
+                        }]}>
+                            <Image style={[{alignSelf:'flex-end',width:20,height:20,marginHorizontal:5}]} source={require('../../res/image/bubble_like.png')}/>
+                            <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{item.like_count}</Text>
+                            <Image style={[{alignSelf:'flex-end',width:20,height:20,marginLeft:12}]} source={require('../../res/image/bubble_share.png')}/>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchView>
         );
     }
 
     renderMusicView(item) {
         return(
+            <TouchView onPress={()=>this.onItemClick(item)}>
             <View style={[styles.itemStyle,{paddingHorizontal:24}]}>
                 <Text style={styles.itemAuthorStyle}>- {item.tag_list.length>0?item.tag_list[0].title:'音乐'} -</Text>
                 <Text style={styles.itemTitleStyle}>{item.title}</Text>
@@ -349,11 +352,13 @@ export default class DailyPage extends BaseRefreshComponent{
                     </View>
                 </View>
             </View>
+            </TouchView>
         );
     }
 
     renderMovieView(item) {
         return(
+            <TouchView onPress={()=>this.onItemClick(item)}>
             <View style={[styles.itemStyle,{paddingHorizontal:24}]}>
                 <Text style={styles.itemAuthorStyle}>- {item.tag_list.length>0?item.tag_list[0].title:'影视'} -</Text>
                 <Text style={styles.itemTitleStyle}>{item.title}</Text>
@@ -389,11 +394,13 @@ export default class DailyPage extends BaseRefreshComponent{
                     </View>
                 </View>
             </View>
+            </TouchView>
         );
     }
 
     renderRadioView(item) {
         return(
+            <TouchView onPress={()=>this.onItemClick(item)}>
             <View style={[styles.itemStyle,]}>
                 <Image
                     style={[styles.itemImageStyle,{height:250}]}
@@ -404,6 +411,7 @@ export default class DailyPage extends BaseRefreshComponent{
                     }
                 </Image>
             </View>
+            </TouchView>
         );
     }
 
@@ -421,40 +429,42 @@ export default class DailyPage extends BaseRefreshComponent{
         }
         userName = item.author?item.author.user_name:'作者';
         return(
-            <View style={[styles.itemStyle,{paddingHorizontal:24}]}>
-                <Text style={styles.itemAuthorStyle}>- {title} -</Text>
-                <Text style={styles.itemTitleStyle}>{item.title}</Text>
-                <Text style={[styles.itemAuthorStyle,{alignSelf:'flex-start'}]}>{item.answerer?item.answerer.user_name+'答':'文 / '+userName}</Text>
-                <Image
-                    style={styles.itemImageStyle}
-                    resizeMode={'cover'}
-                    source={{uri:item.img_url}}  />
-                <Text style={[styles.itemAuthorStyle,{lineHeight:28,alignSelf:'flex-start'}]}>{item.forward}</Text>
-                <View
-                    style={[{
-                        paddingVertical:StyleScheme.commonPadding,
-                        width:'100%',
-                        flexDirection:'row',
-                        justifyContent:'space-between',
-                        alignItems:'flex-start',
-                    }]}
-                >
-                    <View    style={[{
-                        flexDirection:'row',
-                        alignItems:'flex-start',
-                    }]}>
-                        <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{TimeUtils.parserDate(item.post_date)}</Text>
-                    </View>
-                    <View  style={[{
-                        flexDirection:'row',
-                        alignItems:'flex-start',
-                    }]}>
-                        <Image style={[{alignSelf:'flex-end',width:20,height:20,marginHorizontal:5}]} source={require('../../res/image/bubble_like.png')}/>
-                        <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{item.like_count}</Text>
-                        <Image style={[{alignSelf:'flex-end',width:20,height:20,marginLeft:12}]} source={require('../../res/image/bubble_share.png')}/>
+            <TouchView onPress={()=>this.onItemClick(item)}>
+                <View style={[styles.itemStyle,{paddingHorizontal:24}]}>
+                    <Text style={styles.itemAuthorStyle}>- {title} -</Text>
+                    <Text style={styles.itemTitleStyle}>{item.title}</Text>
+                    <Text style={[styles.itemAuthorStyle,{alignSelf:'flex-start'}]}>{item.answerer?item.answerer.user_name+'答':'文 / '+userName}</Text>
+                    <Image
+                        style={styles.itemImageStyle}
+                        resizeMode={'cover'}
+                        source={{uri:item.img_url}}  />
+                    <Text style={[styles.itemAuthorStyle,{lineHeight:28,alignSelf:'flex-start'}]}>{item.forward}</Text>
+                    <View
+                        style={[{
+                            paddingVertical:StyleScheme.commonPadding,
+                            width:'100%',
+                            flexDirection:'row',
+                            justifyContent:'space-between',
+                            alignItems:'flex-start',
+                        }]}
+                    >
+                        <View    style={[{
+                            flexDirection:'row',
+                            alignItems:'flex-start',
+                        }]}>
+                            <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{TimeUtils.parserDate(item.post_date)}</Text>
+                        </View>
+                        <View  style={[{
+                            flexDirection:'row',
+                            alignItems:'flex-start',
+                        }]}>
+                            <Image style={[{alignSelf:'flex-end',width:20,height:20,marginHorizontal:5}]} source={require('../../res/image/bubble_like.png')}/>
+                            <Text style={[{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTextSize}]}>{item.like_count}</Text>
+                            <Image style={[{alignSelf:'flex-end',width:20,height:20,marginLeft:12}]} source={require('../../res/image/bubble_share.png')}/>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </TouchView>
         );
     }
 
@@ -575,7 +585,6 @@ export default class DailyPage extends BaseRefreshComponent{
                     <View    style={[{
                         flexDirection:'row',
                         alignItems:'center',
-
                     }]}>
                         <Image style={[{width:25,height:25,borderRadius:12.5,marginRight:5}]} source={{uri:item.author.web_url}}/>
                     </View>
@@ -590,6 +599,23 @@ export default class DailyPage extends BaseRefreshComponent{
                 </View>
             </View>
         );
+    }
+
+    onItemClick(item) {
+        const{
+            onItemClick
+        } = this.props;
+        if (CommonUtils.checkFunction(onItemClick))
+            onItemClick(item);
+
+    }
+
+    onMenuItemClick(item) {
+        const{
+            onMenuItemClick
+        } = this.props;
+        if (CommonUtils.checkFunction(onMenuItemClick))
+            onMenuItemClick(item);
     }
 }
 

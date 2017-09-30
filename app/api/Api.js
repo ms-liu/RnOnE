@@ -63,6 +63,14 @@ export default class Api{
     };
 
     /**
+     * 获取详情页面数据
+     * @param id
+     */
+    getDetailData=(id)=>{
+        return this.http.doGet(true)(`essay/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+
+    /**
      * 根据经纬度 获取地理位置
      * @param latitude
      * @param longitude

@@ -37,6 +37,12 @@ export default class CommonUtils{
         srcSeparate = srcSeparate ?srcSeparate:'-';
         desSeparate = desSeparate?desSeparate:' / ';
         return src.replace(new RegExp(srcSeparate,'g'),desSeparate);
+    };
+
+    static replaceByRegPattern(srcStr,pattern,desElement){
+        let match = srcStr.toString().match(pattern);
+        // LogUtils.logMsg('=match=='+match);
+        return srcStr.replace(match,desElement);
     }
 
     static randomNum(min,max){

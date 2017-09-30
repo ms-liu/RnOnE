@@ -14,7 +14,7 @@ import {
     NativeModules,
     StyleSheet,
     View,
-    Animated, ScrollView, Text, Navigator,
+    StatusBar,
 } from 'react-native'
 
 import StyleScheme from '../res/value/StyleScheme'
@@ -29,13 +29,44 @@ const styles = StyleSheet.create({
 });
 
 export default  class BaseUIComponent extends BaseComponent{
+    static STATUS_BAR_DARK = 'dark-content';
+    static STATUS_BAR_LIGHT = 'light-content';
+    static STATUS_BAR_DEFAULT = 'default';
+
+    static PAGE_COMMON= 'page_common';
+    static PAGE_TRANSLUCENT= 'page_translucent';
+    static PAGE_FULL_SCREEN= 'page_full_screen';
+
+    static ANIAMATION_NONE = 'none';
+    static ANIAMATION_SLIDE = 'slide';
+    static ANIAMATION_FADE = 'fade';
+    mNavigationBar = null;
     constructor(props){
         super(props);
         this.renderNavigator = this.renderNavigator.bind(this);
         this.renderBody = this.renderBody.bind(this);
         this.toggleBottomNavigator = this.toggleBottomNavigator.bind(this);
+        this.renderNavigatorTitle = this.renderNavigatorTitle.bind(this);
     };
 
+    componentDidMount(){
+        StatusBar.setBackgroundColor(this.setStatusBarColor(),true);
+        StatusBar.setBarStyle(BaseUIComponent.STATUS_BAR_DARK,true);
+        switch (this.setPageShowMode()){
+            case BaseUIComponent.PAGE_FULL_SCREEN:
+                StatusBar.setHidden(true,this.setFullScreenAnimation());
+                break;
+            case BaseUIComponent.PAGE_TRANSLUCENT:
+                StatusBar.setTranslucent(this.setTranslucentMode());
+                break;
+            case BaseUIComponent.PAGE_COMMON:
+            default:
+                break;
+        }
+
+
+        super.componentDidMount();
+    }
 
     /**
      * 绑定垂直滚动监听 方便做动画效果
@@ -51,7 +82,11 @@ export default  class BaseUIComponent extends BaseComponent{
      */
     renderNavigator(){
         return(
-            <AppNavigationBar />
+            <AppNavigationBar
+                ref={navigationBar=>this.mNavigationBar = navigationBar}
+                onBackIconClick={()=>{this.goBack()}}
+                title={this.renderNavigatorTitle()}
+                />
         );
     }
 
@@ -91,5 +126,28 @@ export default  class BaseUIComponent extends BaseComponent{
         );
     }
 
+    renderNavigatorTitle() {
+        return 'NewP'
+    }
+
+    setStatusBarColor() {
+        return StyleScheme.colorPrimary;
+    }
+
+    setTranslucentMode() {
+        return false;
+    }
+
+    setStatusBarHidden() {
+        return false;
+    }
+
+    setPageShowMode() {
+        return BaseUIComponent.PAGE_COMMON;
+    }
+
+    setFullScreenAnimation() {
+        return BaseUIComponent.ANIAMATION_SLIDE;
+    }
 }
 

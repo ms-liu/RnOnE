@@ -13,16 +13,20 @@ import {
   AppRegistry,
     Animated
 } from 'react-native';
-import App from './app';
+
 import { StackNavigator } from 'react-navigation';
-import CalendarPage from "./app/componet/page/CalendarPage";
-import CardStackStyleInterpolator from "react-navigation/lib-rn/views/CardStackStyleInterpolator";
 import * as Easing from "react-native/Libraries/Animated/src/Easing";
+import CardStackStyleInterpolator from "react-navigation/lib-rn/views/CardStackStyleInterpolator";
+
+import App from './app';
+import CalendarPage from "./app/componet/page/CalendarPage";
+import EssayDetailPage from "./app/componet/page/EssayDetailPage";
 
 const AppNavigator = StackNavigator({
     //路由配置 page:{screen:PageComponet}
     HomePage: { screen: App },
     CalendarPage: { screen: CalendarPage},
+    DetailPage: { screen: EssayDetailPage},
 },{
     initialRouteName: 'HomePage', // 初始界面
     mode:'card',//显示模式card

@@ -7,17 +7,17 @@
  * CrateDate:2017/9/6
  *===========================================
  */
+
 'use strict';
 import React,{Component,PureComponent} from 'react'
 import {
     Platform,
     NativeModules,
     BackHandler,
-
+    StatusBar,
 } from 'react-native'
 import LogUtils from "../util/LogUtils";
 import OrientationIOS from 'react-native-orientation'
-import Toast from "../componet/widget/Toast";
 import NavigationActions from "../../node_modules/react-navigation/lib-rn/NavigationActions";
 
 export default  class BaseComponent extends PureComponent{
@@ -129,7 +129,6 @@ export default  class BaseComponent extends PureComponent{
      * 可见 可交互
      */
     componentDidMount(){
-        // LogUtils.logMsg("====>componentDidMount");
         this.loadData();
     }
 

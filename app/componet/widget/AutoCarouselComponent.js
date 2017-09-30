@@ -49,7 +49,7 @@ export default class AutoCarouselComponent extends PureComponent{
                 <Swiper
                     {...this.props}
                     index={0}
-                    autoplay = {true}
+                    autoplay = {false}
                     dot={this.renderSwiperDotView()}
                     activeDotColor={'white'}
                     autoplayTimeout={5}
