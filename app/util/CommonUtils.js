@@ -65,7 +65,19 @@ export default class CommonUtils{
         return StringValue.loadError[CommonUtils.randomNum(0,(StringValue.loadError.length -1))]
     }
 
-
+    static joinClickJavaScript(btnNames,className,postMessage){
+        return `
+            var ${btnNames} = document.getElementsByClassName('${className}');
+            if (${btnNames} && ${btnNames}.length>0) {
+                var btn = ${btnNames}[0];
+                btn.onclick=function(){
+                    if (this.className.indexOf('disable')<0) {
+                        window.postMessage(JSON.stringify(${JSON.stringify(postMessage)}))
+                    }
+                }
+            }
+        `;
+    }
 
     static getDailyIcon = (date,separate)=>{
         let index = date?date.split(separate?separate:'-')[2]:TimeUtils.getCurrentDayOfMonth();

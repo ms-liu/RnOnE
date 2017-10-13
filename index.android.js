@@ -21,12 +21,14 @@ import CardStackStyleInterpolator from "react-navigation/lib-rn/views/CardStackS
 import App from './app';
 import CalendarPage from "./app/componet/page/CalendarPage";
 import EssayDetailPage from "./app/componet/page/EssayDetailPage";
+import SerialDetailPage from "./app/componet/page/SerialDetailPage";
 
 const AppNavigator = StackNavigator({
     //路由配置 page:{screen:PageComponet}
     HomePage: { screen: App },
     CalendarPage: { screen: CalendarPage},
-    DetailPage: { screen: EssayDetailPage},
+    EssayDetailPage: { screen: EssayDetailPage},
+    SerialDetailPage: { screen: SerialDetailPage},
 },{
     initialRouteName: 'HomePage', // 初始界面
     mode:'card',//显示模式card

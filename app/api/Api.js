@@ -63,11 +63,26 @@ export default class Api{
     };
 
     /**
-     * 获取详情页面数据
+     * 获取详情页面数据 - 阅读
      * @param id
      */
-    getDetailData=(id)=>{
+    getEssayDetailData=(id)=>{
         return this.http.doGet(true)(`essay/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+    /**
+     * 获取详情页面数据 - 连载
+     * @param id
+     */
+    getSerialDetailData=(id)=>{
+        return this.http.doGet(true)(`serialcontent/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+
+    /**
+     * 获取详情页面数据 - 连载章节列表数据
+     * @param id
+     */
+    getSerialListData=(id)=>{
+        return this.http.doGet(true)(`serial/list/${id}${this.COMMON_PARAMETER}`);
     };
 
     /**

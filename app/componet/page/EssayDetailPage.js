@@ -1,6 +1,6 @@
 /**
  *===========================================
- * Description:DetailPage 详情页面
+ * Description:EssayDetailPage 详情页面——阅读
  *
  * Author:M-Liu
  *
@@ -15,8 +15,13 @@
 import React,{PureComponent} from 'react';
 import BaseUIComponent from "../../base/BaseUIComponent";
 import BaseLoadComponent from "../../base/BaseLoadComponent";
-import LogUtils from "../../util/LogUtils";
-import {StyleSheet, Text, View, WebView,ScrollView,StatusBar} from "react-native";
+import {
+    NativeModules,
+    LayoutAnimation,
+    StyleSheet,
+    Text,
+    View,
+    Image} from "react-native";
 import StyleScheme from "../../res/value/StyleScheme";
 import CommonUtils from "../../util/CommonUtils";
 import ConvenientWebView from "../widget/ConvenientWebView";
@@ -27,10 +32,14 @@ const styles = StyleSheet.create({
         flex:1,
     },
 });
+const { UIManager } = NativeModules;
+UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
 export default class EssayDetailPage extends BaseUIComponent{
+    mPlayerAnimationTimer = null;
     constructor(props){
         super(props);
         this.handleScroll = this.handleScroll.bind(this);
+        this.state = {playFlex:0}
     }
     renderNavigatorTitle(){
         const {title} = this.getNavigationParams();
@@ -38,15 +47,41 @@ export default class EssayDetailPage extends BaseUIComponent{
     }
     renderBody(){
         const {contentId} = this.getNavigationParams();
+        const {playFlex} = this.state;
         return (
             <View style={styles.body}>
                 <DetailContent
                     contentId = {contentId}
                     onScrollCallback = {(result)=>this.handleScroll(result)}
+                    onLoadDataCallback = {(data)=>this.handleData(data)}
                 />
                 <View
-                    style={{position:'absolute',bottom:0,width:'100%',height:StyleScheme.appBarHeight,backgroundColor:'#0005'}}
-                />
+                    style={{
+                        position:'absolute',
+                        bottom:0,
+                        width:'100%',
+                        height:StyleScheme.appBarHeight,
+                        backgroundColor:'#fffe',
+                        borderTopWidth:0.5,
+                        borderTopColor:StyleScheme.lineColor,
+                        flex:1,
+                        justifyContent:'center',
+                        alignItems:'center',
+                        flexDirection:'row',
+                    }}
+                >
+                    <View style={{flex:playFlex,zIndex:10,height:'100%',backgroundColor:'red'}} />
+                    <View style={{flex:1,flexDirection:'row', justifyContent:'center',
+                        alignItems:'center',}}>
+                        <Image style={{width:25,height:25,}} source={require('../../res/image/bubble_like.png')} />
+                        <Text style={{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTipTextSize}}>1238</Text>
+                    </View>
+                    <View style={{flex:1,flexDirection:'row', justifyContent:'center',
+                        alignItems:'center',}}>
+                        <Image style={{width:25,height:25,}} source={require('../../res/image/bubble_share.png')} />
+                        <Text style={{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTipTextSize}}></Text>
+                    </View>
+                </View>
              </View>
         )
     }
@@ -61,11 +96,48 @@ export default class EssayDetailPage extends BaseUIComponent{
         }
         this.lastTop = this.top;
     }
+
+    handleData(data) {
+        if(data){
+            if (data.audio){
+                this.doDelayPlayerAnimation();
+            }
+        }
+    }
+
+    doDelayPlayerAnimation(){
+        this.mPlayerAnimationTimer = setTimeout(()=>{
+            LayoutAnimation.configureNext(
+                {
+                    duration: 1500,
+                    create: {
+                        type: LayoutAnimation.Types.linear,
+                        property: LayoutAnimation.Properties.opacity,
+                    },
+                    update: {
+                        type: LayoutAnimation.Types.spring,
+                        springDamping: 0.8,
+                    },
+                    delete: {
+                        type: LayoutAnimation.Types.linear,
+                        property: LayoutAnimation.Properties.opacity,
+                    },
+                }
+            );
+            this.setState({playFlex:3})
+        },2000);
+    }
+
+    componentWillUnmount(){
+        this.mPlayerAnimationTimer && clearTimeout(this.mPlayerAnimationTimer);
+        super.componentWillUnmount();
+    }
 }
 
 class DetailContent extends BaseLoadComponent{
     static property={
         onScrollCallback:React.PropTypes.func,
+        onLoadDataCallback:React.PropTypes.func,
     };
     constructor(props){
         super(props);
@@ -79,8 +151,10 @@ class DetailContent extends BaseLoadComponent{
     loadData(){
         const{
             contentId,
+            onLoadDataCallback,
         } = this.props;
-        this.mApi.getDetailData(contentId).then(result=>{
+        this.mApi.getEssayDetailData(contentId).then(result=>{
+            CommonUtils.checkFunction(onLoadDataCallback) && onLoadDataCallback(result.data);
             this.setState({data:result.data,pageStatus:result.status});
         })
     }

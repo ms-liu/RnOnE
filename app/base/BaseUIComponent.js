@@ -14,13 +14,15 @@ import {
     NativeModules,
     StyleSheet,
     View,
-    StatusBar,
+    StatusBar, Text,
 } from 'react-native'
 
 import StyleScheme from '../res/value/StyleScheme'
 import BaseComponent from "./BaseComponent";
 import BottomNavigationBar from '../componet/widget/BottomNavigationBar'
 import AppNavigationBar from '../componet/widget/AppNavigationBar'
+import PopupWindowComponent from "../componet/widget/PopupWindowComponent";
+import DialogComponent from "../componet/widget/DialogComponent";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -37,10 +39,12 @@ export default  class BaseUIComponent extends BaseComponent{
     static PAGE_TRANSLUCENT= 'page_translucent';
     static PAGE_FULL_SCREEN= 'page_full_screen';
 
-    static ANIAMATION_NONE = 'none';
-    static ANIAMATION_SLIDE = 'slide';
-    static ANIAMATION_FADE = 'fade';
+    static ANIMATION_NONE = 'none';
+    static ANIMATION_SLIDE = 'slide';
+    static ANIMATION_FADE = 'fade';
     mNavigationBar = null;
+    mPopupWindow = null;
+    mDialog = null;
     constructor(props){
         super(props);
         this.renderNavigator = this.renderNavigator.bind(this);
@@ -63,17 +67,7 @@ export default  class BaseUIComponent extends BaseComponent{
             default:
                 break;
         }
-
-
         super.componentDidMount();
-    }
-
-    /**
-     * 绑定垂直滚动监听 方便做动画效果
-     * @param e
-     */
-    bindVerticalScrollListener(e){
-        //todo 实现 头部滚动动画 效果
     }
 
     /**
@@ -122,6 +116,8 @@ export default  class BaseUIComponent extends BaseComponent{
                 {this.renderBody()}
                 {this.renderNavigator()}
                 {this.toggleBottomNavigator()?this.renderBottomNavigator():<View/>}
+                {this.togglePopupWindow()?this.renderPopupWindow():<View/>}
+                {this.toggleAlertDialog()?this.renderAlertDialog():<View/>}
             </View>
         );
     }
@@ -147,7 +143,28 @@ export default  class BaseUIComponent extends BaseComponent{
     }
 
     setFullScreenAnimation() {
-        return BaseUIComponent.ANIAMATION_SLIDE;
+        return BaseUIComponent.ANIMATION_SLIDE;
     }
+
+    renderPopupWindow() {
+        return <PopupWindowComponent  ref={popupWindow=>this.mPopupWindow = popupWindow}
+
+
+        />;
+    }
+
+    togglePopupWindow() {
+        return false;
+    }
+
+
+    toggleAlertDialog() {
+        return false;
+    }
+
+    renderAlertDialog() {
+        return <DialogComponent  ref={dialog=>this.mDialog = dialog}/>;
+    }
+
 }
 

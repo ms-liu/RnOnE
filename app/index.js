@@ -216,12 +216,15 @@ export default class App extends BaseUIComponent {
 
     handleItemClick(item,isMenu) {
         let title = '';
+        let pageName = ''
         switch (!isMenu?item.category:item.content_type){
             case '0'://图文
                 title = '图文';
+
                 break;
             case '4'://音乐
                 title = '音乐';
+
                 break;
             case '5'://影视
                 title = '影视';
@@ -234,9 +237,11 @@ export default class App extends BaseUIComponent {
                 break;
             case '1'://阅读
                 title = '阅读';
+                pageName = 'EssayDetailPage';
                 break;
             case '2'://连载
                 title = '连载';
+                pageName = 'SerialDetailPage';
                 break;
             case '3'://问答
                 title = '问答';
@@ -248,6 +253,7 @@ export default class App extends BaseUIComponent {
         title = !isMenu?(item.tag_list.length>0?item.tag_list[0].title:title):(item.tag?item.tag.title:title);
         let contentId = !isMenu?item.item_id:item.content_id;
         let bgColor = !isMenu?item.content_bgcolor:'';
-        this.navigateNewPage('DetailPage',{title:title,contentId:contentId,bgColor:bgColor});
+        if (pageName)
+            this.navigateNewPage(pageName,{title:title,contentId:contentId,bgColor:bgColor});
     }
 }

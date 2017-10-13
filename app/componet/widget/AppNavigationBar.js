@@ -114,11 +114,12 @@ export default class AppNavigationBar extends PureComponent{
             {
                 toValue:hide?0-StyleScheme.appBarHeight:0,
                 duration:300,
-                easing: Easing.linear//线性运动
-
+                easing: Easing.linear,//线性运动
+                useNativeDriver: true,
             }
         ).start();
     }
+
     show(){
         const {translateValue}=this.state;
         if ((parseInt(JSON.stringify(translateValue)) < 0) && !this.doingAnimation){

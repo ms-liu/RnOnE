@@ -136,7 +136,7 @@ export default class HttpManager extends Component{
     printRequest = requestInfo => fetchFunc =>{
         // let startTime = TimeUtils.getCurrentTimestamp();
         return fetchFunc().then(result => {
-            // LogUtils.logMsg(`${requestInfo} :
+            // LogUtils.logMsg(`${requestInfo} `);
             // \r\nresult = ${JSON.stringify(result)};
             // \r\ntook time = ${ TimeUtils.getCurrentTimestamp() - startTime}ms`);
             return result;

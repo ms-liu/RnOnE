@@ -42,14 +42,24 @@ export default class ConvenientWebView extends PureComponent{
                 startInLoadingState={true}
                 javaScriptEnabled = {true}
                 onMessage={(event)=>{
-                    if (CommonUtils.checkFunction(onLoad))
-                        onMessage();
+                    if (CommonUtils.checkFunction(onMessage))
+                        onMessage(event);
                     this.onWebViewMessage(JSON.parse(event.nativeEvent.data))
                 }}
             />
         )
     }
     onWebVieOnLoad() {
+        const {
+            injectJavaScripts
+        }=this.props;
+        if (injectJavaScripts && CommonUtils.checkFunction(injectJavaScripts)){
+            let injects = injectJavaScripts();
+            if (injects && injects.length >0)
+                for (let i=0;i<injects.length;i++){
+                    this.mWebView && this.mWebView.injectJavaScript(injects[i]);
+                }
+        }
         this.mWebView && this.mWebView.injectJavaScript(ConvenientWebView.SCROLL_EVENT_JS);
     }
     onWebViewMessage(result) {
