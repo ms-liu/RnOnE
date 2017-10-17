@@ -7,6 +7,7 @@
  * CrateDate:2017/9/6
  *===========================================
  */
+
 'use strict';
 import React,{Component} from 'react'
 import {
@@ -23,6 +24,7 @@ import BottomNavigationBar from '../componet/widget/BottomNavigationBar'
 import AppNavigationBar from '../componet/widget/AppNavigationBar'
 import PopupWindowComponent from "../componet/widget/PopupWindowComponent";
 import DialogComponent from "../componet/widget/DialogComponent";
+import LogUtils from "../util/LogUtils";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -54,21 +56,13 @@ export default  class BaseUIComponent extends BaseComponent{
     };
 
     componentDidMount(){
-        StatusBar.setBackgroundColor(this.setStatusBarColor(),true);
-        StatusBar.setBarStyle(BaseUIComponent.STATUS_BAR_DARK,true);
-        switch (this.setPageShowMode()){
-            case BaseUIComponent.PAGE_FULL_SCREEN:
-                StatusBar.setHidden(true,this.setFullScreenAnimation());
-                break;
-            case BaseUIComponent.PAGE_TRANSLUCENT:
-                StatusBar.setTranslucent(this.setTranslucentMode());
-                break;
-            case BaseUIComponent.PAGE_COMMON:
-            default:
-                break;
-        }
+        this.configStatusBar();
         super.componentDidMount();
     }
+
+    // componentWillUnmount(){
+    //     super.componentWillUnmount();
+    // }
 
     /**
      * 返回头部布局
@@ -146,6 +140,11 @@ export default  class BaseUIComponent extends BaseComponent{
         return BaseUIComponent.ANIMATION_SLIDE;
     }
 
+
+    setStatusBarStyle() {
+        return BaseUIComponent.STATUS_BAR_DARK;
+    }
+
     renderPopupWindow() {
         return <PopupWindowComponent  ref={popupWindow=>this.mPopupWindow = popupWindow}
 
@@ -164,6 +163,54 @@ export default  class BaseUIComponent extends BaseComponent{
 
     renderAlertDialog() {
         return <DialogComponent  ref={dialog=>this.mDialog = dialog}/>;
+    }
+
+    configStatusBar() {
+
+        StatusBar.setBackgroundColor(this.setStatusBarColor(),true);
+        StatusBar.setBarStyle(this.setStatusBarStyle(),true);
+        switch (this.setPageShowMode()){
+            case BaseUIComponent.PAGE_FULL_SCREEN:
+                StatusBar.setHidden(true,this.setFullScreenAnimation());
+                break;
+            case BaseUIComponent.PAGE_TRANSLUCENT:
+                StatusBar.setTranslucent(this.setTranslucentMode());
+                break;
+            case BaseUIComponent.PAGE_COMMON:
+            default:
+                StatusBar.setHidden(false,this.setFullScreenAnimation());
+                StatusBar.setTranslucent(false);
+                break;
+        }
+    }
+
+    resetStatusBar(config = {
+        statusBarColor:StyleScheme.colorPrimary,
+        statusBarStyle:BaseUIComponent.STATUS_BAR_DARK,
+        pageMode:BaseUIComponent.PAGE_COMMON,
+    }){
+        if (config.statusBarColor)
+            StatusBar.setBackgroundColor(config.statusBarColor,true);
+
+        if (config.statusBarStyle)
+            StatusBar.setBarStyle(config.statusBarStyle,true);
+
+        if (config.pageMode){
+            switch (config.pageMode){
+                case BaseUIComponent.PAGE_FULL_SCREEN:
+                    StatusBar.setHidden(true,this.setFullScreenAnimation());
+                    break;
+                case BaseUIComponent.PAGE_TRANSLUCENT:
+                    StatusBar.setTranslucent(this.setTranslucentMode());
+                    break;
+                case BaseUIComponent.PAGE_COMMON:
+                default:
+                    StatusBar.setHidden(false,this.setFullScreenAnimation());
+                    StatusBar.setTranslucent(false);
+                    break;
+            }
+        }
+
     }
 
 }

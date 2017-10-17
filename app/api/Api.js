@@ -86,6 +86,28 @@ export default class Api{
     };
 
     /**
+     * 获取详情页面数据 - 问答
+     * @param id
+     */
+    getQuestionData=(id)=>{
+        return this.http.doGet(true)(`question/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+    /**
+     * 获取详情页面数据 - 音乐
+     * @param id
+     */
+    getMusicData=(id)=>{
+        return this.http.doGet(true)(`music/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+    /**
+     * 获取详情页面数据 - 电影
+     * @param id
+     */
+    getMovieData=(id)=>{
+        return this.http.doGet(true)(`movie/htmlcontent/${id}${this.COMMON_PARAMETER}`);
+    };
+
+    /**
      * 根据经纬度 获取地理位置
      * @param latitude
      * @param longitude

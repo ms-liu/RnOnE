@@ -182,5 +182,4 @@ class DetailContent extends BaseLoadComponent{
             />
         );
     };
-//
 }

@@ -86,6 +86,7 @@ export default class App extends BaseUIComponent {
         this.mApi = new Api();
 
     }
+
     componentWillMount(){
         super.componentWillMount();
         //todo 位置信息
@@ -224,10 +225,11 @@ export default class App extends BaseUIComponent {
                 break;
             case '4'://音乐
                 title = '音乐';
-
+                pageName = 'MusicDetailPage';
                 break;
             case '5'://影视
                 title = '影视';
+                pageName = 'MovieDetailPage';
                 break;
             case '8'://电台
                 title = '电台';
@@ -245,6 +247,7 @@ export default class App extends BaseUIComponent {
                 break;
             case '3'://问答
                 title = '问答';
+                pageName = 'QuestionDetailPage';
                 break;
             default:
                 title = 'NewP';

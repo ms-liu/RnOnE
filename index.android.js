@@ -22,6 +22,9 @@ import App from './app';
 import CalendarPage from "./app/componet/page/CalendarPage";
 import EssayDetailPage from "./app/componet/page/EssayDetailPage";
 import SerialDetailPage from "./app/componet/page/SerialDetailPage";
+import MusicDetailPage from "./app/componet/page/MusicDetailPage";
+import MovieDetailPage from "./app/componet/page/MovieDetailPage";
+import QuestionDetailPage from "./app/componet/page/QuestionDetailPage";
 
 const AppNavigator = StackNavigator({
     //路由配置 page:{screen:PageComponet}
@@ -29,6 +32,9 @@ const AppNavigator = StackNavigator({
     CalendarPage: { screen: CalendarPage},
     EssayDetailPage: { screen: EssayDetailPage},
     SerialDetailPage: { screen: SerialDetailPage},
+    MusicDetailPage: { screen: MusicDetailPage},
+    MovieDetailPage: { screen: MovieDetailPage},
+    QuestionDetailPage: { screen: QuestionDetailPage},
 },{
     initialRouteName: 'HomePage', // 初始界面
     mode:'card',//显示模式card

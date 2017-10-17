@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
         flexDirection:'row'
     },
     navigatorIcon:{
-        tintColor:StyleScheme.tabDefaultColor,
         width:25,
         height:25,
     },
@@ -56,14 +55,15 @@ const styles = StyleSheet.create({
 });
 const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
-export default class AppNavigationBar extends PureComponent{
+export default class TransparentNavigationBar extends PureComponent{
     static property ={
         height:React.PropTypes.number
     };
 
     constructor(props){
         super(props);
-        this.state = {translateValue:new Animated.Value(0)}
+        // this.state = {translateValue:new Animated.Value(0)};
+        this.state = {backgroundColor:0xffffff00,borderBottomColor:0xeeeeee00,textColor:0xffffffff,iconColor:0xffffffff}
     }
 
     render(){
@@ -73,26 +73,55 @@ export default class AppNavigationBar extends PureComponent{
             style,
         } = this.props;
         const{
-            translateValue
+            backgroundColor,
+            borderBottomColor,
+            textColor,
+            iconColor,
         } = this.state;
         return(
             <Animated.View style={[
                 styles.navigatorStyle,
                 {
-                    transform: [{translateY: translateValue}],
+                    backgroundColor:backgroundColor,
+                    borderBottomColor:borderBottomColor,
                 },
-                style
+                style,
                 ]}>
                 <TouchView onPress={()=>{CommonUtils.checkFunction(onBackIconClick)?onBackIconClick():{}}}>
                     <Image
-                        style={styles.navigatorIcon}
+                        style={[styles.navigatorIcon,{ tintColor:iconColor,}]}
                         source={require('../../res/image/aliwx_common_back_btn_normal.png')}/>
                 </TouchView>
-                <Text style={styles.navigatorText}>{title}</Text>
+                <Text style={[styles.navigatorText,{color:textColor}]}>{title}</Text>
             </Animated.View>
         );
     }
 
+    closeChange = false;
+    setRatio(ratio){
+        if(ratio === 1 && !this.closeChange){
+            this.closeChange = true;
+            this.setState({backgroundColor:0xffffffff,borderBottomColor:0xeeeeeeff,textColor:0x616161ff,iconColor:0x9e9e9eff})
+        }else {
+            this.closeChange = false;
+            let offsetBG = 0xffffffff - 0xffffff00;
+            let offsetBBC = 0xeeeeeeff - 0xeeeeee00;
+            // let offsetTC =0xffffffff - 0x616161ff;
+            if (ratio === 0){
+                this.setState({
+                    backgroundColor:0xffffff00+(offsetBG * ratio),
+                    borderBottomColor:0xeeeeee00+(offsetBBC * ratio),
+                    textColor:0xffffffff,
+                    iconColor:0xffffffff
+                })
+            }else {
+                this.setState({
+                    backgroundColor:0xffffff00+(offsetBG * ratio),
+                    borderBottomColor:0xeeeeee00+(offsetBBC * ratio),
+                })
+            }
+        }
+    }
 
     // spring  //弹跳
     // linear  //线性
@@ -121,17 +150,6 @@ export default class AppNavigationBar extends PureComponent{
         ).start();
     }
 
-    show(){
-        const {translateValue}=this.state;
-        if ((parseInt(JSON.stringify(translateValue)) < 0) && !this.doingAnimation){
-            this.doDrawerAnimation(false);
-        }
-    }
 
-    hide(){
-        const {translateValue}=this.state;
-        if ((parseInt(JSON.stringify(translateValue)) === 0 && !this.doingAnimation)){
-            this.doDrawerAnimation();
-        }
-    }
+
 }
