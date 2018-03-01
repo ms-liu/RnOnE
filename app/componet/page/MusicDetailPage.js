@@ -146,7 +146,6 @@ export default class MusicDetailPage extends BaseUIComponent{
                 this.reseted = true;
                 this.resetStatusBar({statusBarStyle:BaseUIComponent.STATUS_BAR_DARK});
             }
-
             this.mNavigationBar.setRatio(1);
         }
     }
@@ -270,101 +269,8 @@ class MusicDetailContent extends BaseLoadComponent{
     };
 
     handleMessage(result) {
-        const {
-            contentId,
-            patchPopupWindowComponent,
-            patchAlertDialogComponent,
-        } = this.props;
-        const{
-            serialData
-        } = this.state;
-        // if (!serialData){
-        //     Toast.show(CommonUtils.getNetErrorTip());
-        //     return;
-        // }
-        switch (result.eType){
-            // case 2:
-            //     if (CommonUtils.checkFunction(patchAlertDialogComponent)){
-            //         this.mDialog = patchAlertDialogComponent();
-            //         this.mDialog.setContentView(this.renderDialogContentView(serialData));
-            //         this.mDialog.show();
-            //     }
-            //     break;
-            // case 3:
-            //     // Toast.show('前一张');
-            //     for(let i=0;i<serialData.list.length;i++){
-            //         let item = serialData.list[i];
-            //         if (parseInt(item.id) === parseInt(this.mContentId) && i>0){
-            //             item = serialData.list[i-1];
-            //             this.mContentId = item.id;
-            //             this.doLoadData();
-            //             return;
-            //         }
-            //     }
-            //     break;
-            // case 4:
-            //     for(let i=0;i<serialData.list.length;i++){
-            //         let item = serialData.list[i];
-            //         if (parseInt(item.id) === parseInt(this.mContentId) && i<(serialData.list.length-1)){
-            //             item = serialData.list[i+1];
-            //             this.mContentId = item.id;
-            //             this.doLoadData();
-            //             return;
-            //         }
-            //     }
-            //     break;
-            default:
 
-                break;
-        }
     }
 
-    renderDialogContentView(serialData) {
-        return (
-            <View style={{flex:1,padding:StyleScheme.commonPadding}}>
-
-
-            </View>
-        )
-    }
-//
-// <TouchView onPress={()=>{this.mDialog && this.mDialog.hide()}}>
-// <Image style={{width:25,height:25,}} source={require('../../res/image/close_gray.png')}/>
-// </TouchView>
-// <Text style={{alignSelf:'center',color:StyleScheme.titleColor,fontSize:16,paddingVertical:StyleScheme.commonPadding}}>
-// {`${serialData.title}${parseInt(serialData.finished) === 0?'(未完结)':''}`}
-// </Text>
-// <View style={{backgroundColor:StyleScheme.lineColor,width:'100%',height:0.5,marginBottom:StyleScheme.commonPadding}}/>
-
-//
-// <SerialListComponent
-// scrollData = {serialData.list}
-// onItemClickCallback={(index,itemData)=>this.onSerialMenuClick(index,itemData)}
-// />
-    onSerialMenuClick(index, itemData) {
-        this.mDialog && this.mDialog.hide();
-        this.mContentId = itemData.id;
-        this.doLoadData();
-    }
 }
 
-// class SerialListComponent extends HorizontalScrollComponent{
-//     renderItemView(index,itemData){
-//         this.marginRight =0;
-//         this.marginLeft =0;
-//         return(
-//             <View style={{
-//                 borderRadius:4,
-//                 borderWidth:0.5,
-//                 height:60,
-//                 width:60,
-//                 borderColor:StyleScheme.lineColor,
-//                 marginRight:StyleScheme.commonPadding,
-//                 justifyContent:'center',
-//                 alignItems:"center"
-//             }}>
-//                <Text style={{color:StyleScheme.textColor2,fontSize:16}}> {itemData.number}</Text>
-//             </View>
-//         )
-//     }
-// }

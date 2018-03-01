@@ -1,6 +1,6 @@
 /**
  *===========================================
- * Description:SerialDetailPage 详情页面——电影
+ * Description:SerialDetailPage 详情页面——音乐
  *
  * Author:M-Liu
  *
@@ -30,12 +30,15 @@ import Toast from "../widget/Toast";
 import PopupWindowComponent from "../widget/PopupWindowComponent";
 import HorizontalScrollComponent from "../widget/HorizontalScrollComponent";
 import TouchView from "../widget/TouchView";
+import AppNavigationBar from "../widget/AppNavigationBar";
+import TransparentNavigationBar from "../widget/TransparentNavigationBar";
 const styles = StyleSheet.create({
     body:{
         height:StyleScheme.bottomBarHeight,
         width:'100%',
         flex:1,
     },
+
 });
 const { UIManager } = NativeModules;
 UIManager.setLayoutAnimationEnabledExperimental && UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -45,6 +48,34 @@ export default class MovieDetailPage extends BaseUIComponent{
         super(props);
         this.handleScroll = this.handleScroll.bind(this);
         this.state = {playFlex:0}
+    }
+
+    renderNavigator(){
+        const params = this.getNavigationParams();
+        return(
+            <TransparentNavigationBar
+                style={{ paddingTop:24,height:StyleScheme.appBarHeight+24}}
+                ref={navigationBar=>this.mNavigationBar = navigationBar}
+                onBackIconClick={()=>{
+                    this.goBack()}}
+                title={this.renderNavigatorTitle()}
+            />
+        );
+    }
+
+    setPageShowMode(){
+        return BaseUIComponent.PAGE_TRANSLUCENT;
+    }
+
+    setTranslucentMode(){
+        return true;
+    }
+    setStatusBarColor(){
+        return 'transparent';
+    }
+
+    setStatusBarStyle(){
+        return BaseUIComponent.STATUS_BAR_LIGHT;
     }
 
     renderNavigatorTitle(){
@@ -62,10 +93,10 @@ export default class MovieDetailPage extends BaseUIComponent{
 
     renderBody(){
         const {contentId} = this.getNavigationParams();
-        const {playFlex} = this.state;
+        const {playFlex,data} = this.state;
         return (
             <View style={styles.body}>
-                <SerialDetailContent
+                <MovieDetailContent
                     contentId = {contentId}
                     patchPopupWindowComponent = {()=>{return this.mPopupWindow}}
                     patchAlertDialogComponent = {()=>{return this.mDialog}}
@@ -91,7 +122,7 @@ export default class MovieDetailPage extends BaseUIComponent{
                     <View style={{flex:1,flexDirection:'row', justifyContent:'center',
                         alignItems:'center',}}>
                         <Image style={{width:25,height:25,}} source={require('../../res/image/bubble_like.png')} />
-                        <Text style={{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTipTextSize}}>1238</Text>
+                        <Text style={{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTipTextSize}}>{data?data.praisenum:''}</Text>
                     </View>
                     <View style={{flex:1,flexDirection:'row', justifyContent:'center',
                         alignItems:'center',}}>
@@ -99,23 +130,30 @@ export default class MovieDetailPage extends BaseUIComponent{
                         <Text style={{color:StyleScheme.tipTextColor,fontSize:StyleScheme.commonTipTextSize}}></Text>
                     </View>
                 </View>
-             </View>
+            </View>
         )
     }
-    lastTop=0;
-    top = 0;
+    reseted = false;
     handleScroll(result){
         this.top =result;
-        if (this.lastTop <= this.top){//手势上滑->页面内容下滑
-            this.mNavigationBar.hide();
-        }else {//手势下滑->页面内容上滑
-            this.mNavigationBar.show();
+        let ratio = result/150.0;
+        if (ratio <1){
+            this.reseted = false;
+            this.resetStatusBar({statusBarStyle:BaseUIComponent.STATUS_BAR_LIGHT});
+            this.mNavigationBar.setRatio(ratio);
+        }else {
+            if (!this.reseted){
+                this.reseted = true;
+                this.resetStatusBar({statusBarStyle:BaseUIComponent.STATUS_BAR_DARK});
+            }
+
+            this.mNavigationBar.setRatio(1);
         }
-        this.lastTop = this.top;
     }
 
     handleData(data) {
         if(data){
+            this.setState({data:data});
             if (data.audio){
                 this.doDelayPlayerAnimation();
             }
@@ -146,12 +184,13 @@ export default class MovieDetailPage extends BaseUIComponent{
     }
 
     componentWillUnmount(){
+        this.resetStatusBar();
         this.mPlayerAnimationTimer && clearTimeout(this.mPlayerAnimationTimer);
         super.componentWillUnmount();
     }
 }
 
-class SerialDetailContent extends BaseLoadComponent{
+class MovieDetailContent extends BaseLoadComponent{
     static OPEN_SELECT_SERIAL_JS = CommonUtils.joinClickJavaScript('serialBtns','one-serial-nav-ids-btn',{eType:2,eName:'openSelectSerial',value:{}});
     static OPEN_PRE_STORIES_JS = CommonUtils.joinClickJavaScript('preBtns','one-serial-nav-prev',{eType:3,eName:'openPreStories',value:{}});
     static OPEN_NEXT_STORIES_JS = CommonUtils.joinClickJavaScript('nextBtns','one-serial-nav-next',{eType:4,eName:'openNextStories',value:{}});
@@ -208,22 +247,22 @@ class SerialDetailContent extends BaseLoadComponent{
         html = CommonUtils.replaceByRegPattern(html,this.pattern,this.replaceStr1);
         html = CommonUtils.replaceByRegPattern(html,this.pattern1,this.replaceStr1);
         //为布局加上 appBarHeight+24的margin-top
-        html = CommonUtils.replaceByRegPattern(html,this.pattern2,this.replaceStr2);
+        // html = CommonUtils.replaceByRegPattern(html,this.pattern2,this.replaceStr2);
         return(
             <View style={{flex:1}}>
                 <ConvenientWebView
-                         source={{html:html}}
-                         ref={webView => { this.mWebView = webView;}}
-                         startInLoadingState={true}
-                         injectJavaScripts = {()=>{return [
-                             SerialDetailContent.OPEN_SELECT_SERIAL_JS,
-                             SerialDetailContent.OPEN_PRE_STORIES_JS,
-                             SerialDetailContent.OPEN_NEXT_STORIES_JS,
-                         ]}}
-                         onMessage={(event)=>{this.handleMessage(JSON.parse(event.nativeEvent.data))}}
-                         renderLoading={()=>{return this.renderLoadingView()}}
-                         renderError = {()=>{return this.renderErrorView()}}
-                         onScroll={(result)=>{if (CommonUtils.checkFunction(onScrollCallback)){onScrollCallback(result)} }}
+                    source={{html:html}}
+                    ref={webView => { this.mWebView = webView;}}
+                    startInLoadingState={true}
+                    injectJavaScripts = {()=>{return [
+                        // SerialDetailContent.OPEN_SELECT_SERIAL_JS,
+                        // SerialDetailContent.OPEN_PRE_STORIES_JS,
+                        // SerialDetailContent.OPEN_NEXT_STORIES_JS,
+                    ]}}
+                    onMessage={(event)=>{this.handleMessage(JSON.parse(event.nativeEvent.data))}}
+                    renderLoading={()=>{return this.renderLoadingView()}}
+                    renderError = {()=>{return this.renderErrorView()}}
+                    onScroll={(result)=>{if (CommonUtils.checkFunction(onScrollCallback)){onScrollCallback(result)} }}
                 />
 
             </View>
@@ -239,41 +278,9 @@ class SerialDetailContent extends BaseLoadComponent{
         const{
             serialData
         } = this.state;
-        if (!serialData){
-            Toast.show(CommonUtils.getNetErrorTip());
-            return;
-        }
+
         switch (result.eType){
-            case 2:
-                if (CommonUtils.checkFunction(patchAlertDialogComponent)){
-                    this.mDialog = patchAlertDialogComponent();
-                    this.mDialog.setContentView(this.renderDialogContentView(serialData));
-                    this.mDialog.show();
-                }
-                break;
-            case 3:
-                // Toast.show('前一张');
-                for(let i=0;i<serialData.list.length;i++){
-                    let item = serialData.list[i];
-                    if (parseInt(item.id) === parseInt(this.mContentId) && i>0){
-                        item = serialData.list[i-1];
-                        this.mContentId = item.id;
-                        this.doLoadData();
-                        return;
-                    }
-                }
-                break;
-            case 4:
-                for(let i=0;i<serialData.list.length;i++){
-                    let item = serialData.list[i];
-                    if (parseInt(item.id) === parseInt(this.mContentId) && i<(serialData.list.length-1)){
-                        item = serialData.list[i+1];
-                        this.mContentId = item.id;
-                        this.doLoadData();
-                        return;
-                    }
-                }
-                break;
+
             default:
 
                 break;
@@ -283,21 +290,25 @@ class SerialDetailContent extends BaseLoadComponent{
     renderDialogContentView(serialData) {
         return (
             <View style={{flex:1,padding:StyleScheme.commonPadding}}>
-                <TouchView onPress={()=>{this.mDialog && this.mDialog.hide()}}>
-                    <Image style={{width:25,height:25,}} source={require('../../res/image/close_gray.png')}/>
-                </TouchView>
-                <Text style={{alignSelf:'center',color:StyleScheme.titleColor,fontSize:16,paddingVertical:StyleScheme.commonPadding}}>
-                    {`${serialData.title}${parseInt(serialData.finished) === 0?'(未完结)':''}`}
-                </Text>
-                <View style={{backgroundColor:StyleScheme.lineColor,width:'100%',height:0.5,marginBottom:StyleScheme.commonPadding}}/>
-                <SerialListComponent
-                    scrollData = {serialData.list}
-                    onItemClickCallback={(index,itemData)=>this.onSerialMenuClick(index,itemData)}
-                />
+
+
             </View>
         )
     }
 
+// <TouchView onPress={()=>{this.mDialog && this.mDialog.hide()}}>
+// <Image style={{width:25,height:25,}} source={require('../../res/image/close_gray.png')}/>
+// </TouchView>
+// <Text style={{alignSelf:'center',color:StyleScheme.titleColor,fontSize:16,paddingVertical:StyleScheme.commonPadding}}>
+// {`${serialData.title}${parseInt(serialData.finished) === 0?'(未完结)':''}`}
+// </Text>
+// <View style={{backgroundColor:StyleScheme.lineColor,width:'100%',height:0.5,marginBottom:StyleScheme.commonPadding}}/>
+
+//
+// <SerialListComponent
+// scrollData = {serialData.list}
+// onItemClickCallback={(index,itemData)=>this.onSerialMenuClick(index,itemData)}
+// />
     onSerialMenuClick(index, itemData) {
         this.mDialog && this.mDialog.hide();
         this.mContentId = itemData.id;
@@ -305,23 +316,23 @@ class SerialDetailContent extends BaseLoadComponent{
     }
 }
 
-class SerialListComponent extends HorizontalScrollComponent{
-    renderItemView(index,itemData){
-        this.marginRight =0;
-        this.marginLeft =0;
-        return(
-            <View style={{
-                borderRadius:4,
-                borderWidth:0.5,
-                height:60,
-                width:60,
-                borderColor:StyleScheme.lineColor,
-                marginRight:StyleScheme.commonPadding,
-                justifyContent:'center',
-                alignItems:"center"
-            }}>
-               <Text style={{color:StyleScheme.textColor2,fontSize:16}}> {itemData.number}</Text>
-            </View>
-        )
-    }
-}
+// class SerialListComponent extends HorizontalScrollComponent{
+//     renderItemView(index,itemData){
+//         this.marginRight =0;
+//         this.marginLeft =0;
+//         return(
+//             <View style={{
+//                 borderRadius:4,
+//                 borderWidth:0.5,
+//                 height:60,
+//                 width:60,
+//                 borderColor:StyleScheme.lineColor,
+//                 marginRight:StyleScheme.commonPadding,
+//                 justifyContent:'center',
+//                 alignItems:"center"
+//             }}>
+//                <Text style={{color:StyleScheme.textColor2,fontSize:16}}> {itemData.number}</Text>
+//             </View>
+//         )
+//     }
+// }

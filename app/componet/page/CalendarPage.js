@@ -95,16 +95,6 @@ export default class CalendarPage extends BaseUIComponent{
     renderNavigatorTitle(){
         const params = this.getNavigationParams();
         return CommonUtils.replaceSeparate(params.date);
-        // return (
-        //     <View style={styles.navigatorStyle}>
-        //         <TouchView onPress={()=>{this.goBack()}}>
-        //             <Image
-        //                 style={styles.navigatorIcon}
-        //                 source={require('../../res/image/aliwx_common_back_btn_normal.png')}/>
-        //         </TouchView>
-        //         <Text style={styles.navigatorText}>{}</Text>
-        //     </View>
-        // )
     }
     renderBody(){
         const params = this.getNavigationParams();

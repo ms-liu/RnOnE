@@ -43,16 +43,18 @@ export default class AutoCarouselComponent extends PureComponent{
     render(){
         const {
             carouseShow,
+            autoPlay
         } = this.props;
         if (carouseShow){
             return (
                 <Swiper
                     {...this.props}
                     index={0}
-                    autoplay = {false}
+                    horizontal={true}
+                    autoplay = {true}
                     dot={this.renderSwiperDotView()}
                     activeDotColor={'white'}
-                    autoplayTimeout={5}
+                    autoplayTimeout={10}
                     removeClippedSubviews={false}
                     paginationStyle={{
                         top: 12,
